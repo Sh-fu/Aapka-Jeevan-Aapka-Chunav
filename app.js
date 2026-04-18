@@ -327,12 +327,133 @@ function setupVoiceAgent() {
     };
 }
 
-function speakAI(text, callback) {
+let currentVoiceLang = 'en-US';
+
+const voiceTranslations = {
+    'en': {
+        'intro': "Voice guidance activated. I am your clinical assistant, and I will guide you on every step of the app.",
+        'features': "You are viewing the Treatment Protocols section.",
+        'rehabs': "You have reached Verified Treatment Facilities. Review audited hospitals in Bangalore here.",
+        'tracker': "This is the Patient Portal. Press the button to submit your daily physiological log.",
+        'relax': "This is the Diagnostic Self Evaluation area. You can commence a psychiatric self-screening.",
+        'mind-game': "Optional Assessment Game. Play this interactive game to automatically report your mindset to doctors.",
+        'education': "Clinical Education area. Watch these videos to learn about physiological impacts and relapse prevention.",
+        'booking-section': "Voice Assisted Booking. Tap the microphone here to schedule an appointment with a specialist.",
+        'agent_welcome': "Welcome to Aapka Jeevan Aapka Chunav. How may I help you?",
+        'agent_book_q': "Do you want to book an appointment?",
+        'agent_time_q': "Please mention the time and date of the appointment.",
+        'agent_confirm': "Thank you. Your appointment has been successfully booked for ",
+        'agent_processing': "Agent Processing...",
+        'agent_help_you': "How may I help you today?",
+        'tap_to_speak': "Tap to Speak",
+        'micro_active': "Tap the thoughts that resonate with you right now."
+    },
+    'hi': {
+        'intro': "वॉयस गाइडेंस सक्रिय हो गया है। मैं आपकी नैदानिक सहायक हूं, और मैं आपको ऐप के हर कदम पर मार्गदर्शन करूंगी।",
+        'features': "आप उपचार प्रोटोकॉल अनुभाग देख रहे हैं।",
+        'rehabs': "आप सत्यापित उपचार सुविधाओं तक पहुंच गए हैं। यहां बैंगलोर में ऑडिट किए गए अस्पतालों की समीक्षा करें।",
+        'tracker': "यह रोगी पोर्टल है। अपना दैनिक शारीरिक लॉग सबमिट करने के लिए बटन दबाएं।",
+        'relax': "यह नैदानिक स्व-मूल्यांकन क्षेत्र है। आप मनोरोग स्व-स्क्रीनिंग शुरू कर सकते हैं।",
+        'mind-game': "वैकल्पिक मूल्यांकन खेल। डॉक्टरों को अपनी मानसिकता की रिपोर्ट करने के लिए इस इंटरैक्टिव गेम को खेलें।",
+        'education': "नैदानिक शिक्षा क्षेत्र। शारीरिक प्रभावों और पुनरावृत्ति रोकथाम के बारे में जानने के लिए ये वीडियो देखें।",
+        'booking-section': "वॉयस असिस्टेड बुकिंग। विशेषज्ञ के साथ अपॉइंटमेंट शेड्यूल करने के लिए यहां माइक्रोफ़ोन पर टैप करें।",
+        'agent_welcome': "आपका जीवन आपका चुनाव में आपका स्वागत है। मैं आपकी क्या मदद कर सकती हूं?",
+        'agent_book_q': "क्या आप अपॉइंटमेंट बुक करना चाहते हैं?",
+        'agent_time_q': "कृपया अपॉइंटमेंट का समय और तारीख बताएं।",
+        'agent_confirm': "धन्यवाद। आपका अपॉइंटमेंट सफलतापूर्वक बुक कर लिया गया है: ",
+        'agent_processing': "एजेंट प्रोसेसिंग...",
+        'agent_help_you': "मैं आज आपकी कैसे मदद कर सकती हूं?",
+        'tap_to_speak': "बोलने के लिए टैप करें",
+        'micro_active': "उन विचारों पर टैप करें जो अभी आपसे मेल खाते हैं।"
+    },
+    'kn': {
+        'intro': "ಧ್ವನಿ ಮಾರ್ಗದರ್ಶನ ಸಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ. ನಾನು ನಿಮ್ಮ ವೈದ್ಯಕೀಯ ಸಹಾಯಕಿಯಾಗಿದ್ದೇನೆ ಮತ್ತು ಅಪ್ಲಿಕೇಶನ್‌ನ ಪ್ರತಿಯೊಂದು ಹಂತದಲ್ಲೂ ನಾನು ನಿಮಗೆ ಮಾರ್ಗದರ್ಶನ ನೀಡುತ್ತೇನೆ.",
+        'features': "ನೀವು ಚಿಕಿತ್ಸಾ ಪ್ರೋಟೋಕಾಲ್‌ಗಳ ವಿಭಾಗವನ್ನು ವೀಕ್ಷಿಸುತ್ತಿದ್ದೀರಿ.",
+        'rehabs': "ನೀವು ಪರಿಶೀಲಿಸಿದ ಚಿಕಿತ್ಸಾ ಸೌಲಭ್ಯಗಳನ್ನು ತಲುಪಿದ್ದೀರಿ. ಬೆಂಗಳೂರಿನಲ್ಲಿ ಆಡಿಟ್ ಮಾಡಲಾದ ಆಸ್ಪತ್ರೆಗಳನ್ನು ಇಲ್ಲಿ ಪರಿಶೀಲಿಸಿ.",
+        'tracker': "ಇದು ರೋಗಿಗಳ ಪೋರ್ಟಲ್ ಆಗಿದೆ. ನಿಮ್ಮ ದೈನಂದಿನ ದೈಹಿಕ ಲಾಗ್ ಅನ್ನು ಸಲ್ಲಿಸಲು ಬಟನ್ ಒತ್ತಿರಿ.",
+        'relax': "ಇದು ವೈದ್ಯಕೀಯ ಸ್ವಯಂ ಮೌಲ್ಯಮಾಪನ ಪ್ರದೇಶವಾಗಿದೆ. ನೀವು ಮನೋವೈದ್ಯಕೀಯ ಸ್ವಯಂ ಸ್ಕ್ರಿನಿಂಗ್ ಅನ್ನು ಪ್ರಾರಂಭಿಸಬಹುದು.",
+        'mind-game': "ಐಚ್ಛಿಕ ಮೌಲ್ಯಮಾಪನ ಆಟ. ವೈದ್ಯರಿಗೆ ನಿಮ್ಮ ಮನಸ್ಥಿತಿಯನ್ನು ವರದಿ ಮಾಡಲು ಈ ಸಂವಾದಾತ್ಮಕ ಆಟವನ್ನು ಆಡಿ.",
+        'education': "ವೈದ್ಯಕೀಯ ಶಿಕ್ಷಣ ಪ್ರದೇಶ. ದೈಹಿಕ ಪರಿಣಾಮಗಳು ಮತ್ತು ಮರುಕಳಿಸುವ ತಡೆಗಟ್ಟುವಿಕೆಯ ಬಗ್ಗೆ ತಿಳಿಯಲು ಈ ವೀಡಿಯೊಗಳನ್ನು ವೀಕ್ಷಿಸಿ.",
+        'booking-section': "ಧ್ವನಿ ಆಧಾರಿತ ಬುಕಿಂಗ್. ತಜ್ಞರೊಂದಿಗೆ ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ನಿಗದಿಪಡಿಸಲು ಇಲ್ಲಿ ಮೈಕ್ರೊಫೋನ್ ಟ್ಯಾಪ್ ಮಾಡಿ.",
+        'agent_welcome': "ಆಪ್ಕಾ ಜೀವನ್ ಆಪ್ಕಾ ಚುನಾವ್ ಗೆ ಸ್ವಾಗತ. ನಾನು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಲಿ?",
+        'agent_book_q': "ನೀವು ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಮಾಡಲು ಬಯಸುವಿರಾ?",
+        'agent_time_q': "ದಯವಿಟ್ಟು ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಸಮಯ ಮತ್ತು ದಿನಾಂಕವನ್ನು ತಿಳಿಸಿ.",
+        'agent_confirm': "ಧನ್ಯವಾದಗಳು. ನಿಮ್ಮ ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಯಶಸ್ವಿಯಾಗಿ ಬುಕ್ ಆಗಿದೆ: ",
+        'agent_processing': "ಏಜೆಂಟ್ ಪ್ರಕ್ರಿಯೆಯಲ್ಲಿದೆ...",
+        'agent_help_you': "ನಾನು ಇಂದು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಲಿ?",
+        'tap_to_speak': "ಮಾತನಾಡಲು ಟ್ಯಾಪ್ ಮಾಡಿ",
+        'micro_active': "ಇದೀಗ ನಿಮ್ಮ ಮನಸ್ಥಿತಿಗೆ ಹೊಂದಿಕೆಯಾಗುವ ಆಲೋಚನೆಗಳನ್ನು ಟ್ಯಾಪ್ ಮಾಡಿ."
+    },
+    'te': {
+        'intro': "వాయిస్ గైడెన్స్ యాక్టివేట్ చేయబడింది. నేను మీ క్లినికల్ అసిస్టెంట్‌ని, మరియు యాప్ యొక్క ప్రతి దశలో నేను మీకు మార్గనిర్దేశం చేస్తాను.",
+        'features': "మీరు చికిత్స ప్రోటోకాల్‌ల విభాగాన్ని చూస్తున్నారు.",
+        'rehabs': "మీరు ధృవీకరించబడిన చికిత్సా సౌకర్యాలను చేరుకున్నారు. బెంగళూరులో ఆడిట్ చేయబడిన ఆసుపత్రులను ఇక్కడ సమీక్షించండి.",
+        'tracker': "ఇది పేషెంట్ పోర్టల్. మీ రోజువారీ శారీరక లాగ్‌ను సమర్పించడానికి బటన్‌ను నొక్కండి.",
+        'relax': "ఇది క్లినికల్ సెల్ఫ్ ఎవాల్యూయేషన్ ప్రాంతం. మీరు సైకియాట్రిక్ సెల్ఫ్ స్క్రీనింగ్ ప్రారంభించవచ్చు.",
+        'mind-game': "ఐచ్ఛిక మూల్యాంకన గేమ్. మీ మనస్తత్వాన్ని వైద్యులకు నివేదించడానికి ఈ ఇంటరాక్టివ్ గేమ్ ఆడండి.",
+        'education': "క్లినికల్ ఎడ్యుకేషన్ ఏరియా. శారీరక ప్రభావాలు మరియు తిరిగి వ్యసనానికి గురికాకుండా ఉండటం గురించి తెలుసుకోవడానికి ఈ వీడియోలను చూడండి.",
+        'booking-section': "వాయిస్ అసిస్టెడ్ బుకింగ్. నిపుణుడితో అపాయింట్‌మెంట్ షెడ్యూల్ చేయడానికి ఇక్కడ మైక్రోఫోన్‌ను నొక్కండి.",
+        'agent_welcome': "ఆప్కా జీవన్ ఆప్కా చునావ్ కు స్వాగతం. నేను మీకు ఎలా సహాయపడగలను?",
+        'agent_book_q': "మీరు అపాయింట్‌మెంట్ బుక్ చేయాలనుకుంటున్నారా?",
+        'agent_time_q': "దయచేసి అపాయింట్‌మెంట్ సమయం మరియు తేదీని పేర్కొనండి.",
+        'agent_confirm': "ధన్యవాదాలు. మీ అపాయింట్‌మెంట్ విజయవంతంగా బుక్ చేయబడింది: ",
+        'agent_processing': "ఏజెంట్ ప్రాసెస్ చేస్తోంది...",
+        'agent_help_you': "నేను ఈరోజు మీకు ఎలా సహాయపడగలను?",
+        'tap_to_speak': "మాట్లాడటానికి నొక్కండి",
+        'micro_active': "ప్రస్తుతం మీకు అనిపిస్తున్న ఆలోచనలపై నొక్కండి."
+    },
+    'ta': {
+        'intro': "குரல் வழிகாட்டுதல் செயல்படுத்தப்பட்டது. நான் உங்கள் மருத்துவ உதவியாளர், மேலும் பயன்பாட்டின் ஒவ்வொரு அடியிலும் நான் உங்களுக்கு வழிகாட்டுவேன்.",
+        'features': "நீங்கள் சிகிச்சை நெறிமுறைகள் பகுதியை பார்க்கிறீர்கள்.",
+        'rehabs': "நீங்கள் சரிபார்க்கப்பட்ட சிகிச்சை வசதிகளை அடைந்துவிட்டீர்கள். பெங்களூரில் தணிக்கை செய்யப்பட்ட மருத்துவமனைகளை இங்கே மதிப்பாய்வு செய்யவும்.",
+        'tracker': "இது நோயாளி போர்டல். உங்கள் தினசரி உடல் பதிவைச் சமர்ப்பிக்க பொத்தானை அழுத்தவும்.",
+        'relax': "இது மருத்துவ சுய மதிப்பீட்டு பகுதி. நீங்கள் மனநல சுய பரிசோதனையைத் தொடங்கலாம்.",
+        'mind-game': "விருப்ப மதிப்பீட்டு விளையாட்டு. உங்கள் மனநிலையை மருத்துவர்களுக்குப் புகாரளிக்க இந்த ஊடாடும் விளையாட்டை விளையாடுங்கள்.",
+        'education': "மருத்துவ கல்வி பகுதி. உடல் பாதிப்புகள் மற்றும் மீண்டும் போதை பழக்கத்திற்கு ஆளாகாமல் தடுப்பது பற்றி அறிய இந்த வீடியோக்களைப் பாருங்கள்.",
+        'booking-section': "குரல் வழி முன்பதிவு. ஒரு நிபுணருடன் சந்திப்பைத் திட்டமிட இங்கே மைக்ரோஃபோனைத் தட்டவும்.",
+        'agent_welcome': "ஆப்கா ஜீவன் ஆப்கா சுனாவிற்கு உங்களை வரவேற்கிறோம். நான் உங்களுக்கு எப்படி உதவ முடியும்?",
+        'agent_book_q': "நீங்கள் ஒரு சந்திப்பை முன்பதிவு செய்ய விரும்புகிறீர்களா?",
+        'agent_time_q': "சந்திப்பின் நேரம் மற்றும் தேதியைக் குறிப்பிடவும்.",
+        'agent_confirm': "நன்றி. உங்கள் சந்திப்பு வெற்றிகரமாக முன்பதிவு செய்யப்பட்டது: ",
+        'agent_processing': "ஏஜென்ட் செயலாக்குகிறது...",
+        'agent_help_you': "இன்று நான் உங்களுக்கு எப்படி உதவ முடியும்?",
+        'tap_to_speak': "பேச தட்டவும்",
+        'micro_active': "இப்போது நீங்கள் உணரும் எண்ணங்களைத் தட்டவும்."
+    }
+};
+
+function getVoiceText(key) {
+    // Get the current google translate selection
+    const combo = document.querySelector('.goog-te-combo');
+    let lang = 'en';
+    if (combo && combo.value) {
+        lang = combo.value;
+    }
+    
+    // Fallback to English if translation not found
+    const langSet = voiceTranslations[lang] || voiceTranslations['en'];
+    currentVoiceLang = {
+        'hi': 'hi-IN',
+        'kn': 'kn-IN',
+        'te': 'te-IN',
+        'ta': 'ta-IN',
+        'en': 'en-US'
+    }[lang] || 'en-US';
+    
+    return langSet[key] || voiceTranslations['en'][key];
+}
+
+function speakAI(textOrKey, callback, isRawText = false) {
     if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel(); // Clear queue to prevent overlapping voices
-        const utterance = new SpeechSynthesisUtterance(text);
+        window.speechSynthesis.cancel();
+        
+        let textToSpeak = isRawText ? textOrKey : getVoiceText(textOrKey);
+        
+        const utterance = new SpeechSynthesisUtterance(textToSpeak);
+        utterance.lang = currentVoiceLang;
         utterance.rate = 0.9;
         utterance.pitch = 1.1;
+        
         if (callback) {
             utterance.onend = callback;
         }
@@ -350,7 +471,7 @@ function setupOralGuidance() {
         if (!guidanceActive) {
             guidanceActive = true;
             // Introduce the app upon first tap!
-            speakAI("Voice guidance activated. I am your clinical assistant, and I will guide you on every step of the app.");
+            speakAI("intro");
         }
     }, { once: true });
 
@@ -362,28 +483,8 @@ function setupOralGuidance() {
                 if (!spokenSections.has(sectionId)) {
                     spokenSections.add(sectionId);
                     
-                    switch(sectionId) {
-                        case 'features': 
-                            speakAI("You are viewing the Treatment Protocols section."); 
-                            break;
-                        case 'rehabs': 
-                            speakAI("You have reached Verified Treatment Facilities. Review audited hospitals in Bangalore here."); 
-                            break;
-                        case 'tracker': 
-                            speakAI("This is the Patient Portal. Press the button to submit your daily physiological log."); 
-                            break;
-                        case 'relax': 
-                            speakAI("This is the Diagnostic Self Evaluation area. You can commence a psychiatric self-screening."); 
-                            break;
-                        case 'mind-game': 
-                            speakAI("Optional Assessment Game. Play this interactive game to automatically report your mindset to doctors."); 
-                            break;
-                        case 'education':
-                            speakAI("Clinical Education area. Watch these videos to learn about physiological impacts and relapse prevention.");
-                            break;
-                        case 'booking-section':
-                            speakAI("Voice Assisted Booking. Tap the microphone here to schedule an appointment with a specialist.");
-                            break;
+                    if (voiceTranslations['en'][sectionId]) {
+                        speakAI(sectionId);
                     }
                 }
             }
@@ -402,7 +503,7 @@ function setupOralGuidance() {
         card.addEventListener('mouseenter', () => {
             if (guidanceActive) {
                 const title = card.querySelector('h4');
-                if (title) speakAI(title.innerText + " quick action.");
+                if (title) speakAI(title.innerText, null, true); // Speak raw text for dynamic headers
             }
         });
     });
@@ -443,7 +544,7 @@ function startMindGame() {
     timeLeft = 20;
     document.getElementById('game-timer').innerText = timeLeft + 's';
     
-    speakAI("Tap the thoughts that resonate with you right now.");
+    speakAI("micro_active");
     
     gameTimerInterval = setInterval(() => {
         timeLeft--;
@@ -545,10 +646,10 @@ function setupBookingVoiceAgent() {
     bookingMic.addEventListener('click', () => {
         if (!isListening) {
             if (bookingState === 0) {
-                document.getElementById('booking-status-title').innerText = "Smart Agent Active";
-                const intro = "Welcome to Aapka Jeevan Aapka Chunav. How may I help you?";
+                document.getElementById('booking-status-title').innerText = getVoiceText('agent_processing');
+                const intro = getVoiceText('agent_welcome');
                 document.getElementById('booking-status-text').innerText = intro;
-                speakAI(intro, () => {
+                speakAI('agent_welcome', () => {
                     bookingState = 1;
                     startListening();
                 });
@@ -564,40 +665,41 @@ function setupBookingVoiceAgent() {
         const transcript = event.results[0][0].transcript.toLowerCase();
         stopListening();
         
-        document.getElementById('booking-status-title').innerText = "Agent Processing...";
-        document.getElementById('booking-status-text').innerText = "You: '" + transcript + "'";
+        document.getElementById('booking-status-title').innerText = getVoiceText('agent_processing');
+        document.getElementById('booking-status-text').innerText = getVoiceText('agent_help_you') + " '" + transcript + "'";
         
         setTimeout(() => {
             if (bookingState === 1) {
-                const nextQ = "Do you want to book an appointment?";
+                const nextQ = getVoiceText('agent_book_q');
                 document.getElementById('booking-status-text').innerText = nextQ;
-                speakAI(nextQ, () => {
+                speakAI('agent_book_q', () => {
                     bookingState = 2;
                     startListening();
                 });
             } else if (bookingState === 2) {
-                if (transcript.includes('yes') || transcript.includes('yeah') || transcript.includes('book') || transcript.includes('sure')) {
-                    const nextQ = "Please mention the time and date of the appointment.";
+                if (transcript.includes('yes') || transcript.includes('yeah') || transcript.includes('book') || transcript.includes('sure') || 
+                    transcript.includes('हाँ') || transcript.includes('ಹೌದು') || transcript.includes('అవును') || transcript.includes('ஆம்')) {
+                    const nextQ = getVoiceText('agent_time_q');
                     document.getElementById('booking-status-text').innerText = nextQ;
-                    speakAI(nextQ, () => {
+                    speakAI('agent_time_q', () => {
                         bookingState = 3;
                         startListening();
                     });
                 } else {
                     speakAI("Understood. Let me know if you need anything else.", () => {
                         bookingState = 0;
-                        document.getElementById('booking-status-title').innerText = "Tap to Initialize Agent";
-                    });
+                        document.getElementById('booking-status-title').innerText = getVoiceText('tap_to_speak');
+                    }, true);
                 }
             } else if (bookingState === 3) {
                 document.getElementById('booking-status-title').innerText = "Appointment Found";
-                document.getElementById('booking-status-text').innerText = "We have booked your appointment for: " + transcript;
+                document.getElementById('booking-status-text').innerText = getVoiceText('agent_confirm') + transcript;
                 
                 const detailsBox = document.getElementById('booking-confirmation-details');
                 document.getElementById('booking-ticket').innerText = "Date/Time: " + transcript + "\nStatus: Confirmed & Booked";
                 detailsBox.style.display = 'block';
                 
-                speakAI("Thank you. Your appointment has been successfully booked for " + transcript + ".", () => {
+                speakAI('agent_confirm', () => {
                     bookingState = 0;
                 });
             }
@@ -606,7 +708,7 @@ function setupBookingVoiceAgent() {
 
     recognition.onerror = () => {
         stopListening();
-        document.getElementById('booking-status-title').innerText = "Tap to Resume Conversation";
+        document.getElementById('booking-status-title').innerText = getVoiceText('tap_to_speak');
     };
 }
 
