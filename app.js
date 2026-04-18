@@ -471,66 +471,66 @@ function speakAI(textOrKey, callback, isRawText = false) {
     
     window.speechSynthesis.cancel();
     
-    // Determine the text and language
     let textToSpeak;
     if (isRawText) {
         textToSpeak = textOrKey;
-        getSelectedLang(); // Still set currentVoiceLang
+        getSelectedLang(); 
     } else {
         textToSpeak = getVoiceText(textOrKey);
     }
     
     function doSpeak() {
         const utterance = new SpeechSynthesisUtterance(textToSpeak);
-        utterance.lang = currentVoiceLang;
-        utterance.rate = 0.95;
-        utterance.pitch = 1.0;
         
-        // Select best matching voice from cached list
+        // Find best matching voice
+        const voices = cachedVoices.length > 0 ? cachedVoices : window.speechSynthesis.getVoices();
         const targetPrefix = currentVoiceLang.split('-')[0];
-        let bestVoice = cachedVoices.find(v => v.lang === currentVoiceLang);
-        if (!bestVoice) bestVoice = cachedVoices.find(v => v.lang.startsWith(targetPrefix));
-        if (!bestVoice) bestVoice = cachedVoices.find(v => v.lang.toLowerCase().startsWith(targetPrefix));
+        
+        let bestVoice = voices.find(v => v.lang === currentVoiceLang);
+        if (!bestVoice) bestVoice = voices.find(v => v.lang.startsWith(targetPrefix));
         
         if (bestVoice) {
             utterance.voice = bestVoice;
+            utterance.lang = currentVoiceLang;
+        } else {
+            // Even if no local voice is found, we set the lang to the target.
+            // Modern browsers (like Edge/Chrome) sometimes have online fallbacks
+            // that don't appear in the local list until called.
+            utterance.lang = currentVoiceLang; 
+            console.warn(`Local voice pack for ${currentVoiceLang} missing. Attempting browser default for this lang.`);
         }
         
-        if (callback) {
-            utterance.onend = callback;
-        }
+        utterance.rate = 0.95;
+        utterance.pitch = 1.0;
         
-        // Safety: if speech gets stuck (Chrome bug), force-resolve callback after 15s
-        let safetyTimer = null;
         if (callback) {
-            safetyTimer = setTimeout(() => {
-                window.speechSynthesis.cancel();
-                callback();
-            }, 15000);
             const origCallback = callback;
+            let called = false;
+            
             utterance.onend = () => {
-                clearTimeout(safetyTimer);
-                origCallback();
+                if (!called) {
+                    called = true;
+                    origCallback();
+                }
             };
+            
+            // Safety timeout
+            setTimeout(() => {
+                if (!called) {
+                    called = true;
+                    window.speechSynthesis.cancel();
+                    origCallback();
+                }
+            }, 10000);
         }
         
         window.speechSynthesis.speak(utterance);
     }
     
-    // If voices not loaded yet, wait for them
     if (cachedVoices.length === 0) {
-        window.speechSynthesis.onvoiceschanged = () => {
-            cachedVoices = window.speechSynthesis.getVoices();
-            doSpeak();
-        };
-        // Also try loading immediately in case event already fired
         cachedVoices = window.speechSynthesis.getVoices();
-        if (cachedVoices.length > 0) {
-            doSpeak();
-        }
-    } else {
-        doSpeak();
     }
+    doSpeak();
 }
 
 // Oral Voice Guidance System
