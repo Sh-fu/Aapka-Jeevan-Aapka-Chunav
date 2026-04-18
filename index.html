@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aapka Jeevan Aapka Chunav | Anonymous Drug Rehab & Support in India</title>
+    <meta name="description" content="A safe, anonymous, and non-judgmental space to overcome drug addiction. Find verified Nasha Mukti Kendras, chat with counselors silently, and start your recovery journey today.">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'en,hi,kn,te,ta'}, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</head>
+<body>
+    <!-- Top Emergency Strip (Apollo Style) -->
+    <div class="top-emergency-strip">
+        <div class="strip-content">
+            <span class="emergency-text"><i class="fa-solid fa-truck-medical"></i> CLINICAL EMERGENCY: Dial 112 Immediately in Cases of Overdose or Acute Withdrawal</span>
+            <div class="top-links" style="display: flex; align-items: center; gap: 1rem;">
+                <!-- Native Google Translate Selector -->
+                <div id="google_translate_element" style="padding: 0.2rem 0.5rem; border-radius: 4px; background: rgba(255,255,255,0.1);"></div>
+                <button id="sos-btn" class="btn-sos-mini"><i class="fa-solid fa-triangle-exclamation"></i> Instant Psychiatric Triage</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Centered Logo Header & Navbar -->
+    <div class="medical-header">
+        <div class="logo-center">
+            <img src="logo.png" alt="Aapka Jeevan Aapka Chunav Logo" class="main-logo">
+            <div class="logo-title">Aapka Jeevan <span>Aapka Chunav</span></div>
+            <div class="logo-subtitle">A Clinical Recovery Initiative</div>
+        </div>
+        <nav class="centered-nav">
+            <div class="nav-links">
+                <a href="#about"><i class="fa-solid fa-book-medical"></i> Clinical Mission</a>
+                <a href="#features"><i class="fa-solid fa-microscope"></i> Treatment Protocols</a>
+                <a href="#rehabs"><i class="fa-solid fa-hospital-user"></i> Verified Facilities</a>
+                <a href="#tracker"><i class="fa-solid fa-chart-line"></i> Patient Portal</a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Apollo Style Hero Banner -->
+    <header class="clinical-hero">
+        <div class="hero-badge"><i class="fa-solid fa-shield-halved"></i> HIPAA-Compliant Non-Retention Infrastructure</div>
+        <h1>Clinical Pathways for Stabilization.</h1>
+        <p>Access immediate psychological triage, diagnostic self-evaluations, and a nationwide directory of medically vetted rehabilitation facilities. Strict data non-retention protocols are active.</p>
+        
+        <div class="apollo-search-box">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" placeholder="Search for rehabilitation centers, doctors, or therapies in Bangalore...">
+            <button class="btn-primary search-btn">Search</button>
+        </div>
+    </header>
+
+    <!-- Floating Apollo Quick Actions -->
+    <div class="apollo-quick-actions">
+        <div class="action-card" onclick="window.location.href='#rehabs'">
+            <div class="action-icon" style="background: rgba(13, 148, 136, 0.15); color: var(--accent-teal)"><i class="fa-solid fa-hospital"></i></div>
+            <h4>Locate Centers</h4>
+        </div>
+        <div class="action-card" onclick="window.location.href='#relax'">
+            <div class="action-icon" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-orange)"><i class="fa-solid fa-clipboard-question"></i></div>
+            <h4>Diagnostics</h4>
+        </div>
+        <div class="action-card" onclick="document.getElementById('voice-agent-btn').click()">
+            <div class="action-icon" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6"><i class="fa-solid fa-headset"></i></div>
+            <h4>Voice Agent</h4>
+        </div>
+        <div class="action-card" id="theme-trigger" onclick="document.getElementById('theme-toggle-btn').click();">
+            <div class="action-icon" style="background: rgba(236, 72, 153, 0.15); color: #ec4899"><i class="fa-solid fa-music"></i></div>
+            <h4>Audio Therapy</h4>
+            <button id="theme-toggle-btn" style="display:none;"></button>
+            <audio id="theme-audio" loop>
+                <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg">
+            </audio>
+        </div>
+    </div>
+
+    <!-- Apollo Style Stats Overview -->
+    <div class="apollo-stats-strip">
+        <div class="stat">
+            <h2>3+</h2>
+            <p>Verified Care Centers</p>
+        </div>
+        <div class="stat">
+            <h2>100%</h2>
+            <p>Unlogged Anonymity</p>
+        </div>
+        <div class="stat">
+            <h2>24/7</h2>
+            <p>AI Triage T.A.T.</p>
+        </div>
+        <div class="stat">
+            <h2>15+</h2>
+            <p>Clinical Protocols</p>
+        </div>
+    </div>
+
+    <!-- Core Features Section - Centres of Excellence Style -->
+    <section id="features" class="medical-section">
+        <div class="apollo-section-header">
+            <h2>Clinical Pillars of Excellence</h2>
+            <div class="title-divider"></div>
+            <p>Our platform incorporates standardized medical protocols ensuring absolute patient confidentiality and validated intervention frameworks.</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="medical-card">
+                <div class="card-icon icon-blue">
+                    <i class="fa-solid fa-shield-virus"></i>
+                </div>
+                <h3>Confidentiality Protocols</h3>
+                <p>Engage with clinical AI triage agents anonymously. We employ strict non-retention policies; no PII or logs exist.</p>
+            </div>
+            
+            <div class="medical-card">
+                <div class="card-icon icon-teal">
+                    <i class="fa-solid fa-staff-snake"></i>
+                </div>
+                <h3>Certified Network</h3>
+                <p>Facilities listed undergo rigorous auditing for adherence to psychiatric care standards and ethical medical staffing.</p>
+            </div>
+            
+            <div class="medical-card">
+                <div class="card-icon icon-orange">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
+                <h3>Relapse Prevention</h3>
+                <p>Monitor neurological recovery and abstinence durations. Visualizing physiological milestones improves dopaminergic regulation.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rehab Finder Section (Apollo "Find a Doctor" Style) -->
+    <section id="rehabs" class="medical-section bg-section-alt">
+        <div class="apollo-section-header">
+            <h2>Verified Treatment Facilities in Bangalore</h2>
+            <div class="title-divider"></div>
+            <p>Review audited independent rehabilitation hospitals and specialized detoxification wards.</p>
+        </div>
+
+        <div class="rehab-list" id="rehab-list-container">
+            <!-- Populated via Javascript -->
+        </div>
+    </section>
+
+    <!-- Tools Grid: Tracking & Diagnostics -->
+    <div class="tools-grid-wrapper">
+        <!-- Gamified Recovery Tracker Section -->
+        <section id="tracker" class="medical-section split-section">
+            <div class="apollo-section-header">
+                <h2>Physiological Monitoring</h2>
+                <div class="title-divider"></div>
+            </div>
+            
+            <div class="tracker-container">
+                <div class="tracker-main">
+                    <div class="days-circle">
+                        <span id="sober-days-count">0</span>
+                        <small>Days Sustained</small>
+                    </div>
+                    <button id="check-in-btn" class="btn-primary" style="margin-top: 1.5rem; width: 100%;"><i class="fa-solid fa-clipboard-check"></i> Submit Vitals Log</button>
+                </div>
+                
+                <div class="tracker-badges">
+                    <h3>Clinical Milestones</h3>
+                    <div class="badge-grid" id="badge-grid">
+                        <!-- Badges populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reflection Exercise Section -->
+        <section id="relax" class="medical-section split-section border-left">
+            <div class="apollo-section-header">
+                <h2>Diagnostic Self-Evaluation</h2>
+                <div class="title-divider"></div>
+            </div>
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Initiate a structured psychiatric self-screening. Your responses dictate immediate triage recommendations.</p>
+            <div class="mcq-container" id="mcq-container" style="margin: 0 auto;">
+                <button class="btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem;" onclick="renderMCQ()">Commence Evaluation</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Optional Mindset Game Section -->
+    <section id="mind-game" class="medical-section bg-section-alt" style="border-top: 1px solid var(--glass-border);">
+        <div class="apollo-section-header">
+            <h2>Optional Assessment Game</h2>
+            <div class="title-divider"></div>
+            <p>A short, interactive mini-game to help your clinical team understand how your brain is processing information today.</p>
+            <button id="open-game-btn" class="btn-primary" style="margin-top: 1rem;" onclick="openOptionalGame()">Play Mindset Game</button>
+        </div>
+        
+        <!-- Game Modal / Container (Hidden by default) -->
+        <div id="game-container-wrapper" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 3000; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
+            <div id="game-container" style="position: relative; width: 90%; max-width: 800px; height: 600px; background: var(--bg-dark); border-radius: 20px; overflow: hidden; border: 1px solid var(--glass-border); box-shadow: 0 10px 40px rgba(0,0,0,0.6);">
+                
+                <button class="close-modal" onclick="closeOptionalGame()" style="position: absolute; top: 1rem; right: 1rem; z-index: 50; color: white; background: transparent; border: none; font-size: 1.5rem; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+                
+                <div style="text-align: center; margin-top: 2rem;">
+                    <h3 style="color: white; font-family: 'Outfit', sans-serif;">Pop the Floating Thoughts</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Tap any thought that you are feeling right now. Ignore the rest.</p>
+                </div>
+
+                <div id="game-timer" style="position: absolute; top: 2rem; left: 2rem; color: var(--accent-orange); font-weight: bold; font-size: 1.5rem;">20s</div>
+
+                <button id="start-game-btn" class="btn-primary" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10;" onclick="startMindGame()">Start Round</button>
+                
+                <div id="game-end-msg" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: var(--text-main); z-index: 10; background: rgba(0,0,0,0.5); padding: 2rem; border-radius: 16px;">
+                    <h3>Game Over</h3>
+                    <p style="color: var(--accent-teal); font-size: 1rem;">Profile Generated For Clinical Review.</p>
+                    <button class="btn-outline" style="margin-top: 1rem;" onclick="closeOptionalGame()">Return to Portal</button>
+                </div>
+                
+                <div id="game-diagnostic-report" style="display:none; position: absolute; bottom: 10px; right: 10px; font-size: 0.75rem; color: var(--accent-orange); background: rgba(0,0,0,0.7); padding: 8px; border-radius: 4px; pointer-events: none; z-index: 20;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Anonymous SOS Chat Modal -->
+    <div class="modal-overlay" id="sos-modal">
+        <div class="modal-content">
+            <button class="close-modal" id="close-modal">&times;</button>
+            
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-truck-medical"></i> Emergency Psychiatric Triage</h3>
+                <p>Encrypted clinical interface. No session data is retained.</p>
+            </div>
+
+            <div class="chat-box" id="chat-box">
+                <div class="chat-msg msg-ai">
+                    Automated Triage System active. Please describe your current symptoms or urge severity. We will ascertain the necessary level of clinical intervention.
+                </div>
+            </div>
+
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Input clinical parameters/feelings..." autocomplete="off">
+                <button id="send-msg-btn"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clinical Education Videos -->
+    <section id="education" class="medical-section">
+        <div class="apollo-section-header">
+            <h2>Clinical Education & Prevention</h2>
+            <div class="title-divider"></div>
+            <p>Understand the physiological impact of substance dependency and explore proven relapse prevention strategies.</p>
+        </div>
+        <div class="video-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1000px; margin: 0 auto;">
+            <div class="video-card" style="background: var(--bg-card); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--glass-border);">
+                <iframe width="100%" height="250"
+                    src="https://www.youtube.com/embed/8qK0hxuXOC8"
+                    title="How do drugs affect the brain - TED-Ed"
+                    frameborder="0"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen
+                    style="border-radius: 8px;"></iframe>
+                <h4 style="margin-top: 1rem; color: var(--accent-teal);">The Neurological Impact of Consumption</h4>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">How narcotics rewrite neural pathways and alter dopaminergic responses in the brain.</p>
+            </div>
+            <div class="video-card" style="background: var(--bg-card); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--glass-border);">
+                <iframe width="100%" height="250"
+                    src="https://www.youtube.com/embed/HHiN7JftdcY"
+                    title="Addiction Recovery - TEDx"
+                    frameborder="0"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen
+                    style="border-radius: 8px;"></iframe>
+                <h4 style="margin-top: 1rem; color: var(--accent-teal);">Relapse Prevention & Recovery</h4>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">Evidence-based psychological anchors and coping mechanisms to maintain physiological recovery.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Voice Appointment Booking -->
+    <section id="booking-section" class="medical-section bg-section-alt" style="border-top: 1px solid var(--glass-border);">
+        <div class="apollo-section-header">
+            <h2>Smart Booking Agent</h2>
+            <div class="title-divider"></div>
+            <p>Talk directly to our clinical assistant to book your consultation. Our agent will guide you through the process step-by-step.</p>
+        </div>
+        <div class="voice-booking-container" style="text-align: center; max-width: 600px; margin: 0 auto; background: var(--bg-card); padding: 3rem; border-radius: 24px; border: 1px solid var(--glass-border); box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+            <button id="book-appointment-mic" class="btn-sos" style="margin: 0 auto 1.5rem; width: 100px; height: 100px; border-radius: 50%; font-size: 2.5rem; display: flex; justify-content: center; align-items: center; background: var(--accent-teal);"><i class="fa-solid fa-microphone"></i></button>
+            <h3 style="margin-bottom: 0.5rem;" id="booking-status-title">Tap to Initialize Agent</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;" id="booking-status-text">"How may I help you today?"</p>
+            <div id="booking-confirmation-details" style="display: none; background: rgba(13, 148, 136, 0.1); border: 1px solid var(--accent-teal); padding: 1.5rem; border-radius: 12px; margin-top: 2rem;">
+                <h4 style="color: var(--accent-teal); margin-bottom: 0.5rem;"><i class="fa-solid fa-calendar-check"></i> Appointment Confirmed</h4>
+                <p id="booking-ticket" style="font-size: 0.9rem; font-weight: bold; color: var(--text-main);"></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Voice Agent Button -->
+    <button class="voice-agent-btn" id="voice-agent-btn" title="Speak to Voice Agent">
+        <i class="fa-solid fa-microphone"></i>
+    </button>
+
+    <!-- Footer -->
+    <footer class="white-footer">
+        <p>&copy; 2026 Aapka Jeevan Aapka Chunav. A Clinical Support Architecture.</p>
+        <p style="font-size: 0.8rem; margin-top: 0.5rem; color: var(--text-muted);">Disclaimer: This infrastructure provides algorithmic triage and general clinical guidance. In cases of acute overdose or severe physical withdrawal, dial 112 immediately or proceed to the nearest emergency ward.</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
