@@ -11,7 +11,7 @@
     
     <script type="text/javascript">
         function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'en,hi,kn,te,ta'}, 'google_translate_element');
+            new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'en,hi'}, 'google_translate_element');
         }
     </script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
@@ -22,6 +22,15 @@
         <div class="strip-content">
             <span class="emergency-text"><i class="fa-solid fa-truck-medical"></i> CLINICAL EMERGENCY: Dial 112 Immediately in Cases of Overdose or Acute Withdrawal</span>
             <div class="top-links" style="display: flex; align-items: center; gap: 1rem;">
+                <!-- Voice Toggle -->
+                <div class="voice-toggle-container" style="display: flex; align-items: center; gap: 0.6rem; margin-right: 0.5rem; padding: 0.3rem 0.8rem; background: rgba(255,255,255,0.05); border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);">
+                    <i class="fa-solid fa-comment-dots" style="font-size: 0.8rem; color: var(--accent-teal);"></i>
+                    <span style="font-size: 0.7rem; color: rgba(255,255,255,0.8); font-weight: 700; letter-spacing: 0.5px;">VOICE ASSISTANCE</span>
+                    <label class="voice-switch">
+                        <input type="checkbox" id="global-voice-toggle">
+                        <span class="voice-slider"></span>
+                    </label>
+                </div>
                 <!-- Native Google Translate Selector -->
                 <div id="google_translate_element" style="padding: 0.2rem 0.5rem; border-radius: 4px; background: rgba(255,255,255,0.1);"></div>
                 <button id="sos-btn" class="btn-sos-mini"><i class="fa-solid fa-triangle-exclamation"></i> Instant Psychiatric Triage</button>
@@ -166,7 +175,7 @@
                         <span id="sober-days-count">0</span>
                         <small>Days Sustained</small>
                     </div>
-                    <button id="check-in-btn" class="btn-primary" style="margin-top: 1.5rem; width: 100%;"><i class="fa-solid fa-clipboard-check"></i> Submit Vitals Log</button>
+                    <button id="check-in-btn" class="btn-primary" style="margin-top: 1rem; width: 100%;"><i class="fa-solid fa-clipboard-check"></i> Submit Vitals Log</button>
                 </div>
                 
                 <div class="tracker-badges">
@@ -298,9 +307,6 @@
                 <select id="booking-lang" style="background: var(--bg-card); color: var(--text-main); border: 1px solid var(--glass-border); padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.9rem;">
                     <option value="en">English</option>
                     <option value="hi">हिन्दी (Hindi)</option>
-                    <option value="kn">ಕನ್ನಡ (Kannada)</option>
-                    <option value="te">తెలుగు (Telugu)</option>
-                    <option value="ta">தமிழ் (Tamil)</option>
                 </select>
             </div>
             <h3 style="margin-bottom: 0.5rem;" id="booking-status-title">Tap to Initialize Agent</h3>

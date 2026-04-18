@@ -13,6 +13,56 @@
   --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
 }
 
+/* Voice Toggle Switch Styling */
+.voice-switch {
+  position: relative;
+  display: inline-block;
+  width: 34px;
+  height: 20px;
+}
+
+.voice-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.voice-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255,255,255,0.1);
+  transition: .4s;
+  border-radius: 34px;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.voice-slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
+input:checked + .voice-slider {
+  background-color: var(--accent-teal);
+  border-color: var(--accent-teal);
+}
+
+input:checked + .voice-slider:before {
+  transform: translateX(14px);
+  box-shadow: 0 0 10px rgba(255,255,255,0.8);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -339,7 +389,7 @@ a {
 .tracker-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 3rem;
+  gap: 2rem;
   max-width: 1000px;
   margin: 0 auto;
   align-items: center;
@@ -348,16 +398,16 @@ a {
 .tracker-main {
   text-align: center;
   background: var(--bg-card);
-  padding: 3rem;
-  border-radius: 24px;
+  padding: 2rem;
+  border-radius: 20px;
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
 }
 .days-circle {
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
-  border: 8px solid var(--accent-teal);
+  border: 6px solid var(--accent-teal);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -365,15 +415,34 @@ a {
   margin: 0 auto;
   background: rgba(13, 148, 136, 0.1);
   box-shadow: 0 0 30px rgba(13, 148, 136, 0.2);
+  padding: 15px; /* Stay away from edges */
+  text-align: center;
+  box-sizing: border-box; /* Include padding in dimensions */
 }
 .days-circle span {
-  font-size: 4rem;
+  font-size: 2.8rem; /* Slightly smaller for safer fit */
   font-weight: 800;
   font-family: 'Outfit', sans-serif;
   line-height: 1;
   color: var(--accent-teal);
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.days-circle small { color: var(--text-muted); font-size: 1rem; font-weight: 500; margin-top: 0.5rem; }
+.days-circle small { 
+  color: var(--text-muted); 
+  font-size: 0.75rem; 
+  font-weight: 500; 
+  margin-top: 0.2rem;
+  max-width: 100%;
+  line-height: 1.2;
+  overflow-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Allow 2 lines for longer translations */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 .tracker-badges { flex: 1; min-width: 300px; }
 .tracker-badges h3 { margin-bottom: 1.5rem; font-size: 1.5rem; }
 .badge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 1rem; }
@@ -613,7 +682,7 @@ a {
 
 .apollo-section-header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 .apollo-section-header h2 {
   font-size: 2.2rem;
@@ -639,6 +708,7 @@ a {
 .split-section {
   flex: 1;
   min-width: 300px;
+  padding: 2.5rem 5% !important;
 }
 .border-left {
   border-left: 1px solid var(--glass-border);

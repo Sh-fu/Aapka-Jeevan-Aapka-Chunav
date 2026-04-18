@@ -5,21 +5,21 @@ const verifiedRehabs = [
         location: "Koramangala, Bangalore",
         rating: 4.8,
         specialties: ["Holistic Approach", "Family Counseling", "24/7 Medical Staff"],
-        priceTier: "₹₹₹"
+        priceTier: "�嫖���"
     },
     {
         name: "New Dawn Nasha Mukti Kendra",
         location: "Indiranagar, Bangalore",
         rating: 4.6,
         specialties: ["Post-Recovery Support", "Skill Development"],
-        priceTier: "₹₹"
+        priceTier: "�嫖�"
     },
     {
         name: "Serenity Path Foundation",
         location: "Whitefield, Bangalore",
         rating: 4.9,
         specialties: ["Luxury Respite", "CBT Treatments", "Total Anonymity"],
-        priceTier: "₹₹₹₹"
+        priceTier: "�嫖��嫖�"
     }
 ];
 
@@ -32,6 +32,33 @@ const chatBox = document.getElementById('chat-box');
 const chatInput = document.getElementById('chat-input');
 const sendMsgBtn = document.getElementById('send-msg-btn');
 
+// Global Voice State
+let isVoiceEnabled = localStorage.getItem('isVoiceEnabled') === 'true';
+
+function updateVoiceToggleUI() {
+    const toggle = document.getElementById('global-voice-toggle');
+    if (toggle) toggle.checked = isVoiceEnabled;
+}
+
+function setupGlobalVoiceToggle() {
+    const toggle = document.getElementById('global-voice-toggle');
+    if (toggle) {
+        toggle.addEventListener('change', (e) => {
+            isVoiceEnabled = e.target.checked;
+            localStorage.setItem('isVoiceEnabled', isVoiceEnabled);
+            
+            if (!isVoiceEnabled && window.speechSynthesis) {
+                window.speechSynthesis.cancel();
+            }
+            
+            if (isVoiceEnabled) {
+                // If they turn it on, maybe give a quick confirmation
+                speakAI("intro");
+            }
+        });
+    }
+}
+
 // Render Rehab List Function
 function renderRehabs() {
     if (!rehabContainer) return;
@@ -41,7 +68,7 @@ function renderRehabs() {
         const item = document.createElement('div');
         item.className = 'rehab-item';
         
-        const specs = rehab.specialties.join(' • ');
+        const specs = rehab.specialties.join(' �� ');
         
         item.innerHTML = `
             <div class="rehab-info">
@@ -116,7 +143,7 @@ function handleSendMessage() {
     // Simulate AI typing delay
     setTimeout(() => {
         if (isCrisis) {
-            addMessage("🚨 CLINICAL SAFETY ALERT: Your life is valuable. Please immediately call National Emergency 112, or the AASRA suicide prevention helpline at 9820466726. Help is available 24/7.", false);
+            addMessage("�辶 CLINICAL SAFETY ALERT: Your life is valuable. Please immediately call National Emergency 112, or the AASRA suicide prevention helpline at 9820466726. Help is available 24/7.", false);
         } else {
             const response = aiResponses[responseCounter % aiResponses.length];
             responseCounter++;
@@ -286,12 +313,16 @@ function setupVoiceAgent() {
     let isListening = false;
     
     voiceBtn.addEventListener('click', () => {
+        if (!isVoiceEnabled) {
+            alert("Voice Assistance is currently disabled. Please enable 'VOICE ASSISTANCE' at the top of the page if you wish to use this feature.");
+            return;
+        }
         if (!isListening) {
             recognition.start();
             voiceBtn.classList.add('listening');
             voiceBtn.innerHTML = '<i class="fa-solid fa-ear-listen"></i>';
             isListening = true;
-            speakAI("I am listening. How can I help you today?");
+            speakAI("I am listening. How can I help you today?", null, true);
         } else {
             recognition.stop();
             voiceBtn.classList.remove('listening');
@@ -309,13 +340,13 @@ function setupVoiceAgent() {
         
         // Simple command routing
         if (transcript.includes('emergency') || transcript.includes('help') || transcript.includes('urge')) {
-            speakAI("I am opening the triage area. You are safe.");
+            speakAI("I am opening the triage area. You are safe.", null, true);
             setTimeout(() => { openModal(); }, 1000);
         } else if (transcript.includes('rehab') || transcript.includes('find') || transcript.includes('facility') || transcript.includes('bangalore')) {
-            speakAI("Directing you to verified rehabilitation centers in Bangalore.");
+            speakAI("Directing you to verified rehabilitation centers in Bangalore.", null, true);
             document.getElementById('rehabs').scrollIntoView({ behavior: 'smooth' });
         } else {
-            speakAI("I heard you say: " + transcript + ". I recommend initiating a diagnostic evaluation.");
+            speakAI("I heard you say: " + transcript + ". I recommend initiating a diagnostic evaluation.", null, true);
             setTimeout(() => document.getElementById('relax').scrollIntoView({ behavior: 'smooth' }), 2000);
         }
     };
@@ -330,7 +361,7 @@ function setupVoiceAgent() {
 let currentVoiceLang = 'en-US';
 let cachedVoices = [];
 
-// Preload voices — Chrome loads them asynchronously
+// Preload voices �� Chrome loads them asynchronously
 function loadVoices() {
     cachedVoices = window.speechSynthesis.getVoices();
 }
@@ -341,9 +372,6 @@ if ('speechSynthesis' in window) {
 
 const langCodeMap = {
     'hi': 'hi-IN',
-    'kn': 'kn-IN',
-    'te': 'te-IN',
-    'ta': 'ta-IN',
     'en': 'en-US'
 };
 
@@ -368,80 +396,23 @@ const voiceTranslations = {
         'micro_active': "Tap the thoughts that resonate with you right now."
     },
     'hi': {
-        'intro': "वॉयस गाइडेंस सक्रिय हो गया है। मैं आपकी नैदानिक सहायक हूं, और मैं आपको ऐप के हर कदम पर मार्गदर्शन करूंगी।",
-        'features': "आप उपचार प्रोटोकॉल अनुभाग देख रहे हैं।",
-        'rehabs': "आप सत्यापित उपचार सुविधाओं तक पहुंच गए हैं। यहां बैंगलोर में ऑडिट किए गए अस्पतालों की समीक्षा करें।",
-        'tracker': "यह रोगी पोर्टल है। अपना दैनिक शारीरिक लॉग सबमिट करने के लिए बटन दबाएं।",
-        'relax': "यह नैदानिक स्व-मूल्यांकन क्षेत्र है। आप मनोरोग स्व-स्क्रीनिंग शुरू कर सकते हैं।",
-        'mind-game': "वैकल्पिक मूल्यांकन खेल। डॉक्टरों को अपनी मानसिकता की रिपोर्ट करने के लिए इस इंटरैक्टिव गेम को खेलें।",
-        'education': "नैदानिक शिक्षा क्षेत्र। शारीरिक प्रभावों और पुनरावृत्ति रोकथाम के बारे में जानने के लिए ये वीडियो देखें।",
-        'booking-section': "वॉयस असिस्टेड बुकिंग। विशेषज्ञ के साथ अपॉइंटमेंट शेड्यूल करने के लिए यहां माइक्रोफ़ोन पर टैप करें।",
-        'agent_welcome': "आपका जीवन आपका चुनाव में आपका स्वागत है। मैं आपकी क्या मदद कर सकती हूं?",
-        'agent_book_q': "क्या आप अपॉइंटमेंट बुक करना चाहते हैं?",
-        'agent_time_q': "कृपया अपॉइंटमेंट का समय और तारीख बताएं।",
-        'agent_confirm': "धन्यवाद। आपका अपॉइंटमेंट सफलतापूर्वक बुक कर लिया गया है: ",
-        'agent_understood': "समझ गया। अगर आपको कुछ और चाहिए तो मुझे बताएं।",
-        'agent_processing': "एजेंट प्रोसेसिंग...",
-        'agent_help_you': "मैं आज आपकी कैसे मदद कर सकती हूं?",
+        'intro': "नमस्ते! सेकंड चांस टू लाइफ में आपका स्वागत है।",
+        'features': "हमारी सुविधाएँ",
+        'rehabs': "नशा मुक्ति केंद्र",
+        'tracker': "सोबर डे ट्रैकर",
+        'relax': "रिलैक्स करें",
+        'mind-game': "माइंड गेम",
+        'education': "शैक्षिक सामग्री",
+        'booking-section': "बुकिंग करें",
+        'agent_welcome': "आपका स्वागत है!",
+        'agent_book_q': "क्या आप एक अपॉइंटमेंट बुक करना चाहेंगे?",
+        'agent_time_q': "किस समय?",
+        'agent_confirm': "पुष्टि की गई: ",
+        'agent_understood': "समझ गया।",
+        'agent_processing': "प्रोसेसिंग...",
+        'agent_help_you': "मैं आपकी कैसे मदद कर सकता हूँ?",
         'tap_to_speak': "बोलने के लिए टैप करें",
-        'micro_active': "उन विचारों पर टैप करें जो अभी आपसे मेल खाते हैं।"
-    },
-    'kn': {
-        'intro': "ಧ್ವನಿ ಮಾರ್ಗದರ್ಶನ ಸಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ. ನಾನು ನಿಮ್ಮ ವೈದ್ಯಕೀಯ ಸಹಾಯಕಿಯಾಗಿದ್ದೇನೆ ಮತ್ತು ಅಪ್ಲಿಕೇಶನ್‌ನ ಪ್ರತಿಯೊಂದು ಹಂತದಲ್ಲೂ ನಾನು ನಿಮಗೆ ಮಾರ್ಗದರ್ಶನ ನೀಡುತ್ತೇನೆ.",
-        'features': "ನೀವು ಚಿಕಿತ್ಸಾ ಪ್ರೋಟೋಕಾಲ್‌ಗಳ ವಿಭಾಗವನ್ನು ವೀಕ್ಷಿಸುತ್ತಿದ್ದೀರಿ.",
-        'rehabs': "ನೀವು ಪರಿಶೀಲಿಸಿದ ಚಿಕಿತ್ಸಾ ಸೌಲಭ್ಯಗಳನ್ನು ತಲುಪಿದ್ದೀರಿ. ಬೆಂಗಳೂರಿನಲ್ಲಿ ಆಡಿಟ್ ಮಾಡಲಾದ ಆಸ್ಪತ್ರೆಗಳನ್ನು ಇಲ್ಲಿ ಪರಿಶೀಲಿಸಿ.",
-        'tracker': "ಇದು ರೋಗಿಗಳ ಪೋರ್ಟಲ್ ಆಗಿದೆ. ನಿಮ್ಮ ದೈನಂದಿನ ದೈಹಿಕ ಲಾಗ್ ಅನ್ನು ಸಲ್ಲಿಸಲು ಬಟನ್ ಒತ್ತಿರಿ.",
-        'relax': "ಇದು ವೈದ್ಯಕೀಯ ಸ್ವಯಂ ಮೌಲ್ಯಮಾಪನ ಪ್ರದೇಶವಾಗಿದೆ. ನೀವು ಮನೋವೈದ್ಯಕೀಯ ಸ್ವಯಂ ಸ್ಕ್ರಿನಿಂಗ್ ಅನ್ನು ಪ್ರಾರಂಭಿಸಬಹುದು.",
-        'mind-game': "ಐಚ್ಛಿಕ ಮೌಲ್ಯಮಾಪನ ಆಟ. ವೈದ್ಯರಿಗೆ ನಿಮ್ಮ ಮನಸ್ಥಿತಿಯನ್ನು ವರದಿ ಮಾಡಲು ಈ ಸಂವಾದಾತ್ಮಕ ಆಟವನ್ನು ಆಡಿ.",
-        'education': "ವೈದ್ಯಕೀಯ ಶಿಕ್ಷಣ ಪ್ರದೇಶ. ದೈಹಿಕ ಪರಿಣಾಮಗಳು ಮತ್ತು ಮರುಕಳಿಸುವ ತಡೆಗಟ್ಟುವಿಕೆಯ ಬಗ್ಗೆ ತಿಳಿಯಲು ಈ ವೀಡಿಯೊಗಳನ್ನು ವೀಕ್ಷಿಸಿ.",
-        'booking-section': "ಧ್ವನಿ ಆಧಾರಿತ ಬುಕಿಂಗ್. ತಜ್ಞರೊಂದಿಗೆ ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ನಿಗದಿಪಡಿಸಲು ಇಲ್ಲಿ ಮೈಕ್ರೊಫೋನ್ ಟ್ಯಾಪ್ ಮಾಡಿ.",
-        'agent_welcome': "ಆಪ್ಕಾ ಜೀವನ್ ಆಪ್ಕಾ ಚುನಾವ್ ಗೆ ಸ್ವಾಗತ. ನಾನು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಲಿ?",
-        'agent_book_q': "ನೀವು ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಮಾಡಲು ಬಯಸುವಿರಾ?",
-        'agent_time_q': "ದಯವಿಟ್ಟು ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಸಮಯ ಮತ್ತು ದಿನಾಂಕವನ್ನು ತಿಳಿಸಿ.",
-        'agent_confirm': "ಧನ್ಯವಾದಗಳು. ನಿಮ್ಮ ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಯಶಸ್ವಿಯಾಗಿ ಬುಕ್ ಆಗಿದೆ: ",
-        'agent_understood': "ಅರ್ಥವಾಯಿತು. ನಿಮಗೆ ಬೇರೆ ಏನಾದರೂ ಬೇಕಾದರೆ ನನಗೆ ತಿಳಿಸಿ.",
-        'agent_processing': "ಏಜೆಂಟ್ ಪ್ರಕ್ರಿಯೆಯಲ್ಲಿದೆ...",
-        'agent_help_you': "ನಾನು ಇಂದು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಲಿ?",
-        'tap_to_speak': "ಮಾತನಾಡಲು ಟ್ಯಾಪ್ ಮಾಡಿ",
-        'micro_active': "ಇದೀಗ ನಿಮ್ಮ ಮನಸ್ಥಿತಿಗೆ ಹೊಂದಿಕೆಯಾಗುವ ಆಲೋಚನೆಗಳನ್ನು ಟ್ಯಾಪ್ ಮಾಡಿ."
-    },
-    'te': {
-        'intro': "వాయిస్ గైడెన్స్ యాక్టివేట్ చేయబడింది. నేను మీ క్లినికల్ అసిస్టెంట్‌ని, మరియు యాప్ యొక్క ప్రతి దశలో నేను మీకు మార్గనిర్దేశం చేస్తాను.",
-        'features': "మీరు చికిత్స ప్రోటోకాల్‌ల విభాగాన్ని చూస్తున్నారు.",
-        'rehabs': "మీరు ధృవీకరించబడిన చికిత్సా సౌకర్యాలను చేరుకున్నారు. బెంగళూరులో ఆడిట్ చేయబడిన ఆసుపత్రులను ఇక్కడ సమీక్షించండి.",
-        'tracker': "ఇది పేషెంట్ పోర్టల్. మీ రోజువారీ శారీరక లాగ్‌ను సమర్పించడానికి బటన్‌ను నొక్కండి.",
-        'relax': "ఇది క్లినికల్ సెల్ఫ్ ఎవాల్యూయేషన్ ప్రాంతం. మీరు సైకియాట్రిక్ సెల్ఫ్ స్క్రీనింగ్ ప్రారంభించవచ్చు.",
-        'mind-game': "ఐచ్ఛిక మూల్యాంకన గేమ్. మీ మనస్తత్వాన్ని వైద్యులకు నివేదించడానికి ఈ ఇంటరాక్టివ్ గేమ్ ఆడండి.",
-        'education': "క్లినికల్ ఎడ్యుకేషన్ ఏరియా. శారీరక ప్రభావాలు మరియు తిరిగి వ్యసనానికి గురికాకుండా ఉండటం గురించి తెలుసుకోవడానికి ఈ వీడియోలను చూడండి.",
-        'booking-section': "వాయిస్ అసిస్టెడ్ బుకింగ్. నిపుణుడితో అపాయింట్‌మెంట్ షెడ్యూల్ చేయడానికి ఇక్కడ మైక్రోఫోన్‌ను నొక్కండి.",
-        'agent_welcome': "ఆప్కా జీవన్ ఆప్కా చునావ్ కు స్వాగతం. నేను మీకు ఎలా సహాయపడగలను?",
-        'agent_book_q': "మీరు అపాయింట్‌మెంట్ బుక్ చేయాలనుకుంటున్నారా?",
-        'agent_time_q': "దయచేసి అపాయింట్‌మెంట్ సమయం మరియు తేదీని పేర్కొనండి.",
-        'agent_confirm': "ధన్యవాదాలు. మీ అపాయింట్‌మెంట్ విజయవంతంగా బుక్ చేయబడింది: ",
-        'agent_understood': "అర్థమైంది. మీకు మరేదైనా అవసరమైతే నాకు చెప్పండి.",
-        'agent_processing': "ఏజెంట్ ప్రాసెస్ చేస్తోంది...",
-        'agent_help_you': "నేను ఈరోజు మీకు ఎలా సహాయపడగలను?",
-        'tap_to_speak': "మాట్లాడటానికి నొక్కండి",
-        'micro_active': "ప్రస్తుతం మీకు అనిపిస్తున్న ఆలోచనలపై నొక్కండి."
-    },
-    'ta': {
-        'intro': "குரல் வழிகாட்டுதல் செயல்படுத்தப்பட்டது. நான் உங்கள் மருத்துவ உதவியாளர், மேலும் பயன்பாட்டின் ஒவ்வொரு அடியிலும் நான் உங்களுக்கு வழிகாட்டுவேன்.",
-        'features': "நீங்கள் சிகிச்சை நெறிமுறைகள் பகுதியை பார்க்கிறீர்கள்.",
-        'rehabs': "நீங்கள் சரிபார்க்கப்பட்ட சிகிச்சை வசதிகளை அடைந்துவிட்டீர்கள். பெங்களூரில் தணிக்கை செய்யப்பட்ட மருத்துவமனைகளை இங்கே மதிப்பாய்வு செய்யவும்.",
-        'tracker': "இது நோயாளி போர்டல். உங்கள் தினசரி உடல் பதிவைச் சமர்ப்பிக்க பொத்தானை அழுத்தவும்.",
-        'relax': "இது மருத்துவ சுய மதிப்பீட்டு பகுதி. நீங்கள் மனநல சுய பரிசோதனையைத் தொடங்கலாம்.",
-        'mind-game': "விருப்ப மதிப்பீட்டு விளையாட்டு. உங்கள் மனநிலையை மருத்துவர்களுக்குப் புகாரளிக்க இந்த ஊடாடும் விளையாட்டை விளையாடுங்கள்.",
-        'education': "மருத்துவ கல்வி பகுதி. உடல் பாதிப்புகள் மற்றும் மீண்டும் போதை பழக்கத்திற்கு ஆளாகாமல் தடுப்பது பற்றி அறிய இந்த வீடியோக்களைப் பாருங்கள்.",
-        'booking-section': "குரல் வழி முன்பதிவு. ஒரு நிபுணருடன் சந்திப்பைத் திட்டமிட இங்கே மைக்ரோஃபோனைத் தட்டவும்.",
-        'agent_welcome': "ஆப்கா ஜீவன் ஆப்கா சுனாவிற்கு உங்களை வரவேற்கிறோம். நான் உங்களுக்கு எப்படி உதவ முடியும்?",
-        'agent_book_q': "நீங்கள் ஒரு சந்திப்பை முன்பதிவு செய்ய விரும்புகிறீர்களா?",
-        'agent_time_q': "சந்திப்பின் நேரம் மற்றும் தேதியைக் குறிப்பிடவும்.",
-        'agent_confirm': "நன்றி. உங்கள் சந்திப்பு வெற்றிகரமாக முன்பதிவு செய்யப்பட்டது: ",
-        'agent_understood': "புரிந்தது. உங்களுக்கு வேறு ஏதாவது தேவைப்பட்டால் என்னிடம் கூறுங்கள்.",
-        'agent_processing': "ஏஜென்ட் செயலாக்குகிறது...",
-        'agent_help_you': "இன்று நான் உங்களுக்கு எப்படி உதவ முடியும்?",
-        'tap_to_speak': "பேச தட்டவும்",
-        'micro_active': "இப்போது நீங்கள் உணரும் எண்ணங்களைத் தட்டவும்."
+        'micro_active': "माइक्रोफ़ोन सक्रिय है।"
     }
 };
 
@@ -467,7 +438,7 @@ function getVoiceText(key) {
 }
 
 function speakAI(textOrKey, callback, isRawText = false) {
-    if (!('speechSynthesis' in window)) return;
+    if (!isVoiceEnabled || !('speechSynthesis' in window)) return;
     
     window.speechSynthesis.cancel();
     
@@ -540,7 +511,7 @@ let spokenSections = new Set();
 function setupOralGuidance() {
     // Unlock Audio on first interaction to comply with browser policies
     document.addEventListener('click', () => {
-        if (!guidanceActive) {
+        if (!guidanceActive && isVoiceEnabled) {
             guidanceActive = true;
             // Introduce the app upon first tap!
             speakAI("intro");
@@ -664,18 +635,30 @@ function endMindGame() {
     clearInterval(mindGameInterval);
     clearInterval(gameTimerInterval);
     
-    document.getElementById('game-end-msg').style.display = 'block';
+    document.getElementById('game-diagnostic-report').style.display = 'none';
+    const endMsg = document.getElementById('game-end-msg');
     
-    const reportBox = document.getElementById('game-diagnostic-report');
+    let html = `<h3>Game Over</h3>`;
+    
     if (thoughtProfile.length > 0) {
         const counts = {};
         thoughtProfile.forEach(t => counts[t] = (counts[t] || 0) + 1);
-        reportBox.innerHTML = 'Diagnostic Target Outputs: <br>' + JSON.stringify(counts);
-        reportBox.style.display = 'block';
+        
+        html += `<p style="color: var(--accent-teal); font-size: 1rem; margin-top: 0.5rem; margin-bottom: 1rem;">Profile Generated For Clinical Review.</p>`;
+        html += `<div style="text-align: left; background: rgba(0,0,0,0.6); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; width: 100%; box-sizing: border-box; border: 1px solid var(--glass-border);">`;
+        html += `<span style="display: block; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px;">Primary Focus Areas Detected:</span>`;
+        for (const [key, val] of Object.entries(counts)) {
+            html += `<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; color: var(--text-main); font-size: 0.95rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem;"><span style="font-weight:500;">${key}</span> <strong style="color: var(--accent-orange); background: rgba(245, 158, 11, 0.1); padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.85rem;">${val} selected</strong></div>`;
+        }
+        html += `</div>`;
     } else {
-        reportBox.innerHTML = 'No interaction detected.';
-        reportBox.style.display = 'block';
+        html += `<p style="color: var(--text-muted); margin: 2rem 0;">No active thought bubbles were clicked.</p>`;
     }
+    
+    html += `<button class="btn-outline" onclick="closeOptionalGame()">Return to Portal</button>`;
+    
+    endMsg.innerHTML = html;
+    endMsg.style.display = 'block';
 }
 
 // Voice Assisted Appointment Booking
@@ -728,6 +711,10 @@ function setupBookingVoiceAgent() {
     }
     
     bookingMic.addEventListener('click', () => {
+        if (!isVoiceEnabled) {
+            alert("Voice Assistance is currently disabled. Please enable 'VOICE ASSISTANCE' at the top of the page to book via voice.");
+            return;
+        }
         if (!isListening) {
             if (bookingState === 0) {
                 document.getElementById('booking-status-title').innerText = getVoiceText('agent_processing');
@@ -762,7 +749,7 @@ function setupBookingVoiceAgent() {
                 });
             } else if (bookingState === 2) {
                 if (transcript.includes('yes') || transcript.includes('yeah') || transcript.includes('book') || transcript.includes('sure') || 
-                    transcript.includes('हाँ') || transcript.includes('ಹೌದು') || transcript.includes('అవును') || transcript.includes('ஆம்')) {
+                    transcript.includes('鄐嫩冗鄐�') || transcript.includes('鉦嫩�鉦舟�') || transcript.includes('鈰�做鈺�馬鈺�') || transcript.includes('鉈�悅鉒�')) {
                     const nextQ = getVoiceText('agent_time_q');
                     document.getElementById('booking-status-text').innerText = nextQ;
                     speakAI('agent_time_q', () => {
@@ -798,6 +785,8 @@ function setupBookingVoiceAgent() {
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+    updateVoiceToggleUI();
+    setupGlobalVoiceToggle();
     renderRehabs();
     renderBadges();
     setupThemeSong();
