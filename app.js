@@ -423,11 +423,15 @@ const voiceTranslations = {
 };
 
 function getVoiceText(key) {
-    // Robust detection of Google Translate language
-    const combo = document.querySelector('.goog-te-combo');
+    // Check local booking dropdown first, then global translate dropdown
+    const localCombo = document.getElementById('booking-lang');
+    const globalCombo = document.querySelector('.goog-te-combo');
+    
     let lang = 'en';
-    if (combo && combo.value) {
-        lang = combo.value;
+    if (localCombo && localCombo.value) {
+        lang = localCombo.value;
+    } else if (globalCombo && globalCombo.value) {
+        lang = globalCombo.value;
     }
     
     // Fallback to English if translation not found
@@ -452,7 +456,7 @@ function speakAI(textOrKey, callback, isRawText = false) {
         
         // Find best matching voice for current language
         const voices = window.speechSynthesis.getVoices();
-        const targetPrefix = currentVoiceLang.split('-')[0]; // e.g., 'hi'
+        const targetPrefix = currentVoiceLang.split('-')[0];
         
         let bestVoice = voices.find(v => v.lang === currentVoiceLang);
         if (!bestVoice) {
@@ -639,6 +643,18 @@ function setupBookingVoiceAgent() {
 
     function startListening() {
         try {
+            // Update recognition language based on current selection
+            const localCombo = document.getElementById('booking-lang');
+            if (localCombo && localCombo.value) {
+                recognition.lang = {
+                    'hi': 'hi-IN',
+                    'kn': 'kn-IN',
+                    'te': 'te-IN',
+                    'ta': 'ta-IN',
+                    'en': 'en-US'
+                }[localCombo.value] || 'en-US';
+            }
+            
             recognition.start();
             bookingMic.style.background = 'var(--accent-red)';
             bookingMic.style.animation = 'pulse-red 1.5s infinite';
