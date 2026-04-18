@@ -328,6 +328,24 @@ function setupVoiceAgent() {
 }
 
 let currentVoiceLang = 'en-US';
+let cachedVoices = [];
+
+// Preload voices — Chrome loads them asynchronously
+function loadVoices() {
+    cachedVoices = window.speechSynthesis.getVoices();
+}
+if ('speechSynthesis' in window) {
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+
+const langCodeMap = {
+    'hi': 'hi-IN',
+    'kn': 'kn-IN',
+    'te': 'te-IN',
+    'ta': 'ta-IN',
+    'en': 'en-US'
+};
 
 const voiceTranslations = {
     'en': {
@@ -343,6 +361,7 @@ const voiceTranslations = {
         'agent_book_q': "Do you want to book an appointment?",
         'agent_time_q': "Please mention the time and date of the appointment.",
         'agent_confirm': "Thank you. Your appointment has been successfully booked for ",
+        'agent_understood': "Understood. Let me know if you need anything else.",
         'agent_processing': "Agent Processing...",
         'agent_help_you': "How may I help you today?",
         'tap_to_speak': "Tap to Speak",
@@ -361,6 +380,7 @@ const voiceTranslations = {
         'agent_book_q': "क्या आप अपॉइंटमेंट बुक करना चाहते हैं?",
         'agent_time_q': "कृपया अपॉइंटमेंट का समय और तारीख बताएं।",
         'agent_confirm': "धन्यवाद। आपका अपॉइंटमेंट सफलतापूर्वक बुक कर लिया गया है: ",
+        'agent_understood': "समझ गया। अगर आपको कुछ और चाहिए तो मुझे बताएं।",
         'agent_processing': "एजेंट प्रोसेसिंग...",
         'agent_help_you': "मैं आज आपकी कैसे मदद कर सकती हूं?",
         'tap_to_speak': "बोलने के लिए टैप करें",
@@ -379,6 +399,7 @@ const voiceTranslations = {
         'agent_book_q': "ನೀವು ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಮಾಡಲು ಬಯಸುವಿರಾ?",
         'agent_time_q': "ದಯವಿಟ್ಟು ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಸಮಯ ಮತ್ತು ದಿನಾಂಕವನ್ನು ತಿಳಿಸಿ.",
         'agent_confirm': "ಧನ್ಯವಾದಗಳು. ನಿಮ್ಮ ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಯಶಸ್ವಿಯಾಗಿ ಬುಕ್ ಆಗಿದೆ: ",
+        'agent_understood': "ಅರ್ಥವಾಯಿತು. ನಿಮಗೆ ಬೇರೆ ಏನಾದರೂ ಬೇಕಾದರೆ ನನಗೆ ತಿಳಿಸಿ.",
         'agent_processing': "ಏಜೆಂಟ್ ಪ್ರಕ್ರಿಯೆಯಲ್ಲಿದೆ...",
         'agent_help_you': "ನಾನು ಇಂದು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಲಿ?",
         'tap_to_speak': "ಮಾತನಾಡಲು ಟ್ಯಾಪ್ ಮಾಡಿ",
@@ -397,6 +418,7 @@ const voiceTranslations = {
         'agent_book_q': "మీరు అపాయింట్‌మెంట్ బుక్ చేయాలనుకుంటున్నారా?",
         'agent_time_q': "దయచేసి అపాయింట్‌మెంట్ సమయం మరియు తేదీని పేర్కొనండి.",
         'agent_confirm': "ధన్యవాదాలు. మీ అపాయింట్‌మెంట్ విజయవంతంగా బుక్ చేయబడింది: ",
+        'agent_understood': "అర్థమైంది. మీకు మరేదైనా అవసరమైతే నాకు చెప్పండి.",
         'agent_processing': "ఏజెంట్ ప్రాసెస్ చేస్తోంది...",
         'agent_help_you': "నేను ఈరోజు మీకు ఎలా సహాయపడగలను?",
         'tap_to_speak': "మాట్లాడటానికి నొక్కండి",
@@ -415,6 +437,7 @@ const voiceTranslations = {
         'agent_book_q': "நீங்கள் ஒரு சந்திப்பை முன்பதிவு செய்ய விரும்புகிறீர்களா?",
         'agent_time_q': "சந்திப்பின் நேரம் மற்றும் தேதியைக் குறிப்பிடவும்.",
         'agent_confirm': "நன்றி. உங்கள் சந்திப்பு வெற்றிகரமாக முன்பதிவு செய்யப்பட்டது: ",
+        'agent_understood': "புரிந்தது. உங்களுக்கு வேறு ஏதாவது தேவைப்பட்டால் என்னிடம் கூறுங்கள்.",
         'agent_processing': "ஏஜென்ட் செயலாக்குகிறது...",
         'agent_help_you': "இன்று நான் உங்களுக்கு எப்படி உதவ முடியும்?",
         'tap_to_speak': "பேச தட்டவும்",
@@ -422,8 +445,7 @@ const voiceTranslations = {
     }
 };
 
-function getVoiceText(key) {
-    // Check local booking dropdown first, then global translate dropdown
+function getSelectedLang() {
     const localCombo = document.getElementById('booking-lang');
     const globalCombo = document.querySelector('.goog-te-combo');
     
@@ -434,46 +456,80 @@ function getVoiceText(key) {
         lang = globalCombo.value;
     }
     
-    // Fallback to English if translation not found
+    currentVoiceLang = langCodeMap[lang] || 'en-US';
+    return lang;
+}
+
+function getVoiceText(key) {
+    const lang = getSelectedLang();
     const langSet = voiceTranslations[lang] || voiceTranslations['en'];
-    currentVoiceLang = {
-        'hi': 'hi-IN',
-        'kn': 'kn-IN',
-        'te': 'te-IN',
-        'ta': 'ta-IN',
-        'en': 'en-US'
-    }[lang] || 'en-US';
-    
     return langSet[key] || voiceTranslations['en'][key];
 }
 
 function speakAI(textOrKey, callback, isRawText = false) {
-    if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        
-        let textToSpeak = isRawText ? textOrKey : getVoiceText(textOrKey);
+    if (!('speechSynthesis' in window)) return;
+    
+    window.speechSynthesis.cancel();
+    
+    // Determine the text and language
+    let textToSpeak;
+    if (isRawText) {
+        textToSpeak = textOrKey;
+        getSelectedLang(); // Still set currentVoiceLang
+    } else {
+        textToSpeak = getVoiceText(textOrKey);
+    }
+    
+    function doSpeak() {
         const utterance = new SpeechSynthesisUtterance(textToSpeak);
-        
-        // Find best matching voice for current language
-        const voices = window.speechSynthesis.getVoices();
-        const targetPrefix = currentVoiceLang.split('-')[0];
-        
-        let bestVoice = voices.find(v => v.lang === currentVoiceLang);
-        if (!bestVoice) {
-            bestVoice = voices.find(v => v.lang.startsWith(targetPrefix));
-        }
-        
-        if (bestVoice) utterance.voice = bestVoice;
-        
         utterance.lang = currentVoiceLang;
-        utterance.rate = 1.0; 
+        utterance.rate = 0.95;
         utterance.pitch = 1.0;
+        
+        // Select best matching voice from cached list
+        const targetPrefix = currentVoiceLang.split('-')[0];
+        let bestVoice = cachedVoices.find(v => v.lang === currentVoiceLang);
+        if (!bestVoice) bestVoice = cachedVoices.find(v => v.lang.startsWith(targetPrefix));
+        if (!bestVoice) bestVoice = cachedVoices.find(v => v.lang.toLowerCase().startsWith(targetPrefix));
+        
+        if (bestVoice) {
+            utterance.voice = bestVoice;
+        }
         
         if (callback) {
             utterance.onend = callback;
         }
         
+        // Safety: if speech gets stuck (Chrome bug), force-resolve callback after 15s
+        let safetyTimer = null;
+        if (callback) {
+            safetyTimer = setTimeout(() => {
+                window.speechSynthesis.cancel();
+                callback();
+            }, 15000);
+            const origCallback = callback;
+            utterance.onend = () => {
+                clearTimeout(safetyTimer);
+                origCallback();
+            };
+        }
+        
         window.speechSynthesis.speak(utterance);
+    }
+    
+    // If voices not loaded yet, wait for them
+    if (cachedVoices.length === 0) {
+        window.speechSynthesis.onvoiceschanged = () => {
+            cachedVoices = window.speechSynthesis.getVoices();
+            doSpeak();
+        };
+        // Also try loading immediately in case event already fired
+        cachedVoices = window.speechSynthesis.getVoices();
+        if (cachedVoices.length > 0) {
+            doSpeak();
+        }
+    } else {
+        doSpeak();
     }
 }
 
@@ -714,10 +770,10 @@ function setupBookingVoiceAgent() {
                         startListening();
                     });
                 } else {
-                    speakAI("Understood. Let me know if you need anything else.", () => {
+                    speakAI('agent_understood', () => {
                         bookingState = 0;
                         document.getElementById('booking-status-title').innerText = getVoiceText('tap_to_speak');
-                    }, true);
+                    });
                 }
             } else if (bookingState === 3) {
                 document.getElementById('booking-status-title').innerText = "Appointment Found";
@@ -727,9 +783,9 @@ function setupBookingVoiceAgent() {
                 document.getElementById('booking-ticket').innerText = "Date/Time: " + transcript + "\nStatus: Confirmed & Booked";
                 detailsBox.style.display = 'block';
                 
-                speakAI('agent_confirm', () => {
+                speakAI(getVoiceText('agent_confirm') + transcript, () => {
                     bookingState = 0;
-                });
+                }, true);
             }
         }, 1500);
     };
