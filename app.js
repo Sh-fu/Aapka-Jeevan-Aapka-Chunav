@@ -423,7 +423,7 @@ const voiceTranslations = {
 };
 
 function getVoiceText(key) {
-    // Get the current google translate selection
+    // Robust detection of Google Translate language
     const combo = document.querySelector('.goog-te-combo');
     let lang = 'en';
     if (combo && combo.value) {
@@ -448,15 +448,27 @@ function speakAI(textOrKey, callback, isRawText = false) {
         window.speechSynthesis.cancel();
         
         let textToSpeak = isRawText ? textOrKey : getVoiceText(textOrKey);
-        
         const utterance = new SpeechSynthesisUtterance(textToSpeak);
+        
+        // Find best matching voice for current language
+        const voices = window.speechSynthesis.getVoices();
+        const targetPrefix = currentVoiceLang.split('-')[0]; // e.g., 'hi'
+        
+        let bestVoice = voices.find(v => v.lang === currentVoiceLang);
+        if (!bestVoice) {
+            bestVoice = voices.find(v => v.lang.startsWith(targetPrefix));
+        }
+        
+        if (bestVoice) utterance.voice = bestVoice;
+        
         utterance.lang = currentVoiceLang;
-        utterance.rate = 0.9;
-        utterance.pitch = 1.1;
+        utterance.rate = 1.0; 
+        utterance.pitch = 1.0;
         
         if (callback) {
             utterance.onend = callback;
         }
+        
         window.speechSynthesis.speak(utterance);
     }
 }
