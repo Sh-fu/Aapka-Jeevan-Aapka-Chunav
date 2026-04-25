@@ -772,6 +772,38 @@ function setupBookingVoiceAgent() {
     });
 }
 
+// Doctor Selection Logic
+function selectDoctor(doctorName, btnElement) {
+    // Reset all buttons
+    const allBtns = document.querySelectorAll('.doctor-select-btn');
+    allBtns.forEach(btn => {
+        btn.innerText = 'Select';
+        btn.classList.remove('btn-primary');
+        btn.classList.add('btn-outline');
+        btn.closest('.medical-card').style.borderColor = 'var(--glass-border)';
+        btn.closest('.medical-card').style.boxShadow = 'none';
+    });
+    
+    // Highlight selected
+    btnElement.innerText = 'Selected';
+    btnElement.classList.remove('btn-outline');
+    btnElement.classList.add('btn-primary');
+    
+    const card = btnElement.closest('.medical-card');
+    card.style.borderColor = 'var(--accent-teal)';
+    card.style.boxShadow = '0 0 20px rgba(13, 148, 136, 0.3)';
+    
+    // Update booking ticket
+    const detailsBox = document.getElementById('booking-confirmation-details');
+    const ticket = document.getElementById('booking-ticket');
+    
+    detailsBox.style.display = 'block';
+    ticket.innerHTML = `Doctor: <span style="color:var(--accent-teal)">${doctorName}</span><br>Status: Please use the Voice Agent to select a time slot.`;
+    
+    // Scroll to voice agent
+    document.getElementById('consultation-hub').scrollIntoView({ behavior: 'smooth' });
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     updateVoiceToggleUI();
