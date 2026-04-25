@@ -311,88 +311,89 @@
         </div>
     </section>
 
-    <!-- Voice Appointment Booking -->
-    <section id="booking-section" class="medical-section bg-section-alt" style="border-top: 1px solid var(--glass-border);">
+    <!-- Smart Consultation Hub -->
+    <section id="consultation-hub" class="medical-section bg-section-alt" style="border-top: 1px solid var(--glass-border);">
         <div class="apollo-section-header">
-            <h2>Smart Booking Agent</h2>
+            <h2>Book Your Consultation</h2>
             <div class="title-divider"></div>
-            <p>Talk directly to our clinical assistant to book your consultation. Our agent will guide you through the process step-by-step.</p>
+            <p>Talk to our clinical assistant to schedule your appointment, then select your preferred specialist.</p>
         </div>
-        <div class="voice-booking-container" style="text-align: center; max-width: 600px; margin: 0 auto; background: var(--bg-card); padding: 3rem; border-radius: 24px; border: 1px solid var(--glass-border); box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
-            <button id="book-appointment-mic" class="btn-sos" style="margin: 0 auto 1.5rem; width: 100px; height: 100px; border-radius: 50%; font-size: 2.5rem; display: flex; justify-content: center; align-items: center; background: var(--accent-teal);"><i class="fa-solid fa-microphone"></i></button>
-            <div class="booking-lang-selector" style="margin-bottom: 1.5rem;">
-                <label for="booking-lang" style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-bottom: 0.5rem;">Preferred Language:</label>
-                <select id="booking-lang" style="background: var(--bg-card); color: var(--text-main); border: 1px solid var(--glass-border); padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.9rem;">
-                    <option value="en">English</option>
-                    <option value="hi">हिन्दी (Hindi)</option>
-                </select>
-            </div>
-            <h3 style="margin-bottom: 0.5rem;" id="booking-status-title">Tap to Initialize Agent</h3>
-            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;" id="booking-status-text">"How may I help you today?"</p>
-            <div id="booking-confirmation-details" style="display: none; background: rgba(13, 148, 136, 0.1); border: 1px solid var(--accent-teal); padding: 1.5rem; border-radius: 12px; margin-top: 2rem;">
-                <h4 style="color: var(--accent-teal); margin-bottom: 0.5rem;"><i class="fa-solid fa-calendar-check"></i> Appointment Confirmed</h4>
-                <p id="booking-ticket" style="font-size: 0.9rem; font-weight: bold; color: var(--text-main);"></p>
-            </div>
-        </div>
-    </section>
 
-    <!-- Doctor Consultation Selection -->
-    <section id="doctors" class="medical-section" style="border-top: 1px solid var(--glass-border);">
-        <div class="apollo-section-header">
-            <h2>Select Your Specialist</h2>
-            <div class="title-divider"></div>
-            <p>Our voice agent will help book your slot. Please select the doctor you wish to consult.</p>
-        </div>
-        <div class="doctor-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto;">
-            <!-- Doctor 1 -->
-            <div class="medical-card" style="text-align: center; padding: 2rem 1.5rem;">
-                <div style="width: 80px; height: 80px; background: rgba(13, 148, 136, 0.1); color: var(--accent-teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1rem;">
-                    <i class="fa-solid fa-user-doctor"></i>
+        <div style="display: flex; flex-wrap: wrap; gap: 3rem; max-width: 1400px; margin: 0 auto; padding: 0 2rem;">
+            
+            <!-- Left Side: Voice Agent -->
+            <div style="flex: 1; min-width: 350px; display: flex; flex-direction: column;">
+                <div class="voice-booking-container" style="text-align: center; background: var(--bg-card); padding: 3rem; border-radius: 24px; border: 1px solid var(--glass-border); box-shadow: 0 10px 40px rgba(0,0,0,0.4); flex-grow: 1;">
+                    <h3 style="margin-bottom: 1.5rem; color: var(--text-main); font-size: 1.5rem;">Smart Booking Agent</h3>
+                    <button id="book-appointment-mic" class="btn-sos" style="margin: 0 auto 1.5rem; width: 100px; height: 100px; border-radius: 50%; font-size: 2.5rem; display: flex; justify-content: center; align-items: center; background: var(--accent-teal);"><i class="fa-solid fa-microphone"></i></button>
+                    <div class="booking-lang-selector" style="margin-bottom: 1.5rem;">
+                        <label for="booking-lang" style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-bottom: 0.5rem;">Preferred Language:</label>
+                        <select id="booking-lang" style="background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--glass-border); padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.9rem; width: 100%; max-width: 200px; margin: 0 auto; outline: none;">
+                            <option value="en" style="color: #000;">English</option>
+                            <option value="hi" style="color: #000;">हिन्दी (Hindi)</option>
+                        </select>
+                    </div>
+                    <h3 style="margin-bottom: 0.5rem; font-size: 1.2rem;" id="booking-status-title">Tap to Initialize Agent</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;" id="booking-status-text">"How may I help you today?"</p>
+                    <div id="booking-confirmation-details" style="display: none; background: rgba(13, 148, 136, 0.1); border: 1px solid var(--accent-teal); padding: 1.5rem; border-radius: 12px; margin-top: 2rem;">
+                        <h4 style="color: var(--accent-teal); margin-bottom: 0.5rem;"><i class="fa-solid fa-calendar-check"></i> Appointment Confirmed</h4>
+                        <p id="booking-ticket" style="font-size: 0.9rem; font-weight: bold; color: var(--text-main);"></p>
+                    </div>
                 </div>
-                <h3>Dr. Rajesh Kumar</h3>
-                <p style="color: var(--accent-teal); font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem;">Addiction Psychiatrist</p>
-                <p style="font-size: 0.85rem; margin-bottom: 1.5rem;">15+ years experience in severe dependency management.</p>
-                <button class="btn-outline" style="width: 100%;">Select Doctor</button>
             </div>
-            <!-- Doctor 2 -->
-            <div class="medical-card" style="text-align: center; padding: 2rem 1.5rem;">
-                <div style="width: 80px; height: 80px; background: rgba(13, 148, 136, 0.1); color: var(--accent-teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1rem;">
-                    <i class="fa-solid fa-user-nurse"></i>
+
+            <!-- Right Side: Doctors List -->
+            <div style="flex: 2; min-width: 500px;">
+                <div style="background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 24px; padding: 2rem; box-shadow: 0 10px 40px rgba(0,0,0,0.4);">
+                    <h3 style="margin-bottom: 1.5rem; font-size: 1.4rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 1rem; color: var(--text-main);">Which doctor would you like to consult?</h3>
+                    <div class="doctor-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                        <!-- Doctor 1 -->
+                        <div class="medical-card" style="text-align: center; padding: 1.5rem; border-radius: 16px;">
+                            <div style="width: 60px; height: 60px; background: rgba(13, 148, 136, 0.1); color: var(--accent-teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 1rem;">
+                                <i class="fa-solid fa-user-doctor"></i>
+                            </div>
+                            <h4 style="font-size: 1.1rem; margin-bottom: 0.2rem;">Dr. Rajesh Kumar</h4>
+                            <p style="color: var(--accent-teal); font-weight: 600; margin-bottom: 0.5rem; font-size: 0.8rem;">Addiction Psychiatrist</p>
+                            <button class="btn-outline" style="width: 100%; padding: 0.5rem; font-size: 0.85rem;">Select</button>
+                        </div>
+                        <!-- Doctor 2 -->
+                        <div class="medical-card" style="text-align: center; padding: 1.5rem; border-radius: 16px;">
+                            <div style="width: 60px; height: 60px; background: rgba(13, 148, 136, 0.1); color: var(--accent-teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 1rem;">
+                                <i class="fa-solid fa-user-nurse"></i>
+                            </div>
+                            <h4 style="font-size: 1.1rem; margin-bottom: 0.2rem;">Dr. Anjali Desai</h4>
+                            <p style="color: var(--accent-teal); font-weight: 600; margin-bottom: 0.5rem; font-size: 0.8rem;">Clinical Psychologist</p>
+                            <button class="btn-outline" style="width: 100%; padding: 0.5rem; font-size: 0.85rem;">Select</button>
+                        </div>
+                        <!-- Doctor 3 -->
+                        <div class="medical-card" style="text-align: center; padding: 1.5rem; border-radius: 16px;">
+                            <div style="width: 60px; height: 60px; background: rgba(13, 148, 136, 0.1); color: var(--accent-teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 1rem;">
+                                <i class="fa-solid fa-user-doctor"></i>
+                            </div>
+                            <h4 style="font-size: 1.1rem; margin-bottom: 0.2rem;">Dr. Vikram Singh</h4>
+                            <p style="color: var(--accent-teal); font-weight: 600; margin-bottom: 0.5rem; font-size: 0.8rem;">De-addiction Specialist</p>
+                            <button class="btn-outline" style="width: 100%; padding: 0.5rem; font-size: 0.85rem;">Select</button>
+                        </div>
+                        <!-- Doctor 4 -->
+                        <div class="medical-card" style="text-align: center; padding: 1.5rem; border-radius: 16px;">
+                            <div style="width: 60px; height: 60px; background: rgba(13, 148, 136, 0.1); color: var(--accent-teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 1rem;">
+                                <i class="fa-solid fa-user-nurse"></i>
+                            </div>
+                            <h4 style="font-size: 1.1rem; margin-bottom: 0.2rem;">Dr. Meera Reddy</h4>
+                            <p style="color: var(--accent-teal); font-weight: 600; margin-bottom: 0.5rem; font-size: 0.8rem;">Behavioral Therapist</p>
+                            <button class="btn-outline" style="width: 100%; padding: 0.5rem; font-size: 0.85rem;">Select</button>
+                        </div>
+                        <!-- Doctor 5 -->
+                        <div class="medical-card" style="text-align: center; padding: 1.5rem; border-radius: 16px;">
+                            <div style="width: 60px; height: 60px; background: rgba(13, 148, 136, 0.1); color: var(--accent-teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 1rem;">
+                                <i class="fa-solid fa-user-doctor"></i>
+                            </div>
+                            <h4 style="font-size: 1.1rem; margin-bottom: 0.2rem;">Dr. Sanjay Patel</h4>
+                            <p style="color: var(--accent-teal); font-weight: 600; margin-bottom: 0.5rem; font-size: 0.8rem;">Neurologist</p>
+                            <button class="btn-outline" style="width: 100%; padding: 0.5rem; font-size: 0.85rem;">Select</button>
+                        </div>
+                    </div>
                 </div>
-                <h3>Dr. Anjali Desai</h3>
-                <p style="color: var(--accent-teal); font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem;">Clinical Psychologist</p>
-                <p style="font-size: 0.85rem; margin-bottom: 1.5rem;">Expert in CBT and trauma-informed recovery.</p>
-                <button class="btn-outline" style="width: 100%;">Select Doctor</button>
-            </div>
-            <!-- Doctor 3 -->
-            <div class="medical-card" style="text-align: center; padding: 2rem 1.5rem;">
-                <div style="width: 80px; height: 80px; background: rgba(13, 148, 136, 0.1); color: var(--accent-teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1rem;">
-                    <i class="fa-solid fa-user-doctor"></i>
-                </div>
-                <h3>Dr. Vikram Singh</h3>
-                <p style="color: var(--accent-teal); font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem;">De-addiction Specialist</p>
-                <p style="font-size: 0.85rem; margin-bottom: 1.5rem;">Specializes in detox protocols and withdrawal management.</p>
-                <button class="btn-outline" style="width: 100%;">Select Doctor</button>
-            </div>
-            <!-- Doctor 4 -->
-            <div class="medical-card" style="text-align: center; padding: 2rem 1.5rem;">
-                <div style="width: 80px; height: 80px; background: rgba(13, 148, 136, 0.1); color: var(--accent-teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1rem;">
-                    <i class="fa-solid fa-user-nurse"></i>
-                </div>
-                <h3>Dr. Meera Reddy</h3>
-                <p style="color: var(--accent-teal); font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem;">Behavioral Therapist</p>
-                <p style="font-size: 0.85rem; margin-bottom: 1.5rem;">Focuses on family counseling and relapse prevention.</p>
-                <button class="btn-outline" style="width: 100%;">Select Doctor</button>
-            </div>
-            <!-- Doctor 5 -->
-            <div class="medical-card" style="text-align: center; padding: 2rem 1.5rem;">
-                <div style="width: 80px; height: 80px; background: rgba(13, 148, 136, 0.1); color: var(--accent-teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1rem;">
-                    <i class="fa-solid fa-user-doctor"></i>
-                </div>
-                <h3>Dr. Sanjay Patel</h3>
-                <p style="color: var(--accent-teal); font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem;">Neurologist</p>
-                <p style="font-size: 0.85rem; margin-bottom: 1.5rem;">Evaluates neurological impact and prescribes medical recovery paths.</p>
-                <button class="btn-outline" style="width: 100%;">Select Doctor</button>
             </div>
         </div>
     </section>
