@@ -3,23 +3,50 @@ const verifiedRehabs = [
     {
         name: "Hope Haven Rehabilitation Centre",
         location: "Koramangala, Bangalore",
+        distance: "2.4 km",
         rating: 4.8,
         specialties: ["Holistic Approach", "Family Counseling", "24/7 Medical Staff"],
-        priceTier: "�嫖���"
+        priceTier: "₹₹₹"
     },
     {
         name: "New Dawn Nasha Mukti Kendra",
         location: "Indiranagar, Bangalore",
+        distance: "5.1 km",
         rating: 4.6,
         specialties: ["Post-Recovery Support", "Skill Development"],
-        priceTier: "�嫖�"
+        priceTier: "₹"
     },
     {
         name: "Serenity Path Foundation",
         location: "Whitefield, Bangalore",
+        distance: "8.2 km",
         rating: 4.9,
         specialties: ["Luxury Respite", "CBT Treatments", "Total Anonymity"],
-        priceTier: "�嫖��嫖�"
+        priceTier: "₹₹"
+    },
+    {
+        name: "Jeevan Jyoti De-addiction Center",
+        location: "Rajajinagar, Bangalore",
+        distance: "3.7 km",
+        rating: 4.5,
+        specialties: ["Group Therapy", "Vocational Training", "Meditation"],
+        priceTier: "₹"
+    },
+    {
+        name: "Aastha Medical Rehab Clinic",
+        location: "Jayanagar, Bangalore",
+        distance: "1.2 km",
+        rating: 4.7,
+        specialties: ["Detoxification", "Psychiatric Evaluation", "Yoga"],
+        priceTier: "₹₹"
+    },
+    {
+        name: "Phoenix Recovery Retreat",
+        location: "Yelahanka, Bangalore",
+        distance: "12.5 km",
+        rating: 4.9,
+        specialties: ["Executive Care", "Nutritional Therapy", "1-on-1 Counseling"],
+        priceTier: "₹₹₹"
     }
 ];
 
@@ -53,6 +80,7 @@ function setupGlobalVoiceToggle() {
             
             if (isVoiceEnabled) {
                 // If they turn it on, maybe give a quick confirmation
+                guidanceActive = true;
                 speakAI("intro");
             }
         });
@@ -60,20 +88,26 @@ function setupGlobalVoiceToggle() {
 }
 
 // Render Rehab List Function
-function renderRehabs() {
+function renderRehabs(data = verifiedRehabs) {
     if (!rehabContainer) return;
     
     rehabContainer.innerHTML = '';
-    verifiedRehabs.forEach(rehab => {
+    
+    if (data.length === 0) {
+        rehabContainer.innerHTML = '<p style="text-align: center; color: var(--text-muted);">No facilities found matching your criteria.</p>';
+        return;
+    }
+    
+    data.forEach(rehab => {
         const item = document.createElement('div');
         item.className = 'rehab-item';
         
-        const specs = rehab.specialties.join(' �� ');
+        const specs = rehab.specialties.join(' • ');
         
         item.innerHTML = `
             <div class="rehab-info">
                 <h4>${rehab.name}</h4>
-                <p><i class="fa-solid fa-location-dot"></i> ${rehab.location} &nbsp;|&nbsp; ${specs}</p>
+                <p><i class="fa-solid fa-location-dot"></i> ${rehab.location} <span style="color: var(--accent-orange); margin-left: 0.5rem; font-weight: 600;">(${rehab.distance})</span> &nbsp;|&nbsp; ${specs}</p>
             </div>
             <div class="rehab-stats">
                 <div class="rating"><i class="fa-solid fa-star"></i> ${rehab.rating}</div>
@@ -82,6 +116,40 @@ function renderRehabs() {
             </div>
         `;
         rehabContainer.appendChild(item);
+    });
+}
+
+function setupSearch() {
+    const searchInput = document.getElementById('search-input');
+    const searchBtn = document.getElementById('search-btn');
+    
+    if (!searchInput || !searchBtn) return;
+    
+    function performSearch() {
+        const query = searchInput.value.toLowerCase().trim();
+        if (!query) {
+            renderRehabs();
+            return;
+        }
+        
+        const filtered = verifiedRehabs.filter(r => 
+            r.name.toLowerCase().includes(query) ||
+            r.location.toLowerCase().includes(query) ||
+            r.specialties.some(s => s.toLowerCase().includes(query))
+        );
+        
+        renderRehabs(filtered);
+        
+        // Scroll to results
+        const rehabsSection = document.getElementById('rehabs');
+        if (rehabsSection) {
+            rehabsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+    
+    searchBtn.addEventListener('click', performSearch);
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') performSearch();
     });
 }
 
@@ -294,68 +362,81 @@ function setupThemeSong() {
     }
 }
 
-// Voice Agent Logic
-function setupVoiceAgent() {
-    const voiceBtn = document.getElementById('voice-agent-btn');
-    if (!voiceBtn) return;
-    
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-        console.log("Speech recognition not supported");
-        voiceBtn.style.display = 'none';
-        return;
+// Vapi AI SDK Integration
+let vapiInstance = null;
+let activeVapiButton = null;
+let originalVapiHtml = '';
+
+function initVapiAgent() {
+    if (typeof Vapi !== 'undefined') {
+        vapiInstance = new Vapi("6671b728-be6b-443b-a04e-ae2b9cc5a345");
+        
+        // Setup general voice agent button
+        const voiceBtn = document.getElementById('voice-agent-btn');
+        if (voiceBtn) {
+            voiceBtn.addEventListener('click', () => {
+                if (!isVoiceEnabled) {
+                    alert("Voice Assistance is currently disabled. Please enable 'VOICE ASSISTANCE' at the top of the page.");
+                    return;
+                }
+                toggleVapiCall(voiceBtn, '<i class="fa-solid fa-microphone"></i>', '<i class="fa-solid fa-ear-listen"></i>');
+            });
+        }
+        
+        // Vapi Event Listeners
+        vapiInstance.on('call-start', () => {
+            console.log("Vapi Call Started");
+        });
+        vapiInstance.on('call-end', () => {
+            console.log("Vapi Call Ended");
+            resetVapiButtons();
+        });
+        vapiInstance.on('error', (e) => {
+            console.error("Vapi Error:", e);
+            resetVapiButtons();
+        });
+    } else {
+        console.warn("Vapi SDK not loaded.");
     }
+}
+
+function toggleVapiCall(btnElement, defaultHtml, activeHtml) {
+    if (!vapiInstance) return;
     
-    const recognition = new SpeechRecognition();
-    recognition.continuous = false;
-    recognition.lang = 'en-US';
-    
-    let isListening = false;
-    
-    voiceBtn.addEventListener('click', () => {
-        if (!isVoiceEnabled) {
-            alert("Voice Assistance is currently disabled. Please enable 'VOICE ASSISTANCE' at the top of the page if you wish to use this feature.");
-            return;
+    if (activeVapiButton === btnElement) {
+        // Stop call
+        vapiInstance.stop();
+        resetVapiButtons();
+    } else {
+        // If another button is active, stop it first
+        if (activeVapiButton) {
+            vapiInstance.stop();
+            resetVapiButtons();
         }
-        if (!isListening) {
-            recognition.start();
-            voiceBtn.classList.add('listening');
-            voiceBtn.innerHTML = '<i class="fa-solid fa-ear-listen"></i>';
-            isListening = true;
-            speakAI("I am listening. How can I help you today?", null, true);
-        } else {
-            recognition.stop();
-            voiceBtn.classList.remove('listening');
-            voiceBtn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
-            isListening = false;
-        }
-    });
-    
-    recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript.toLowerCase();
+        // Start call
+        vapiInstance.start("c9df55da-6cbb-4393-82c9-6ba45b85be74");
+        activeVapiButton = btnElement;
+        originalVapiHtml = defaultHtml;
         
-        voiceBtn.classList.remove('listening');
-        voiceBtn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
-        isListening = false;
-        
-        // Simple command routing
-        if (transcript.includes('emergency') || transcript.includes('help') || transcript.includes('urge')) {
-            speakAI("I am opening the triage area. You are safe.", null, true);
-            setTimeout(() => { openModal(); }, 1000);
-        } else if (transcript.includes('rehab') || transcript.includes('find') || transcript.includes('facility') || transcript.includes('bangalore')) {
-            speakAI("Directing you to verified rehabilitation centers in Bangalore.", null, true);
-            document.getElementById('rehabs').scrollIntoView({ behavior: 'smooth' });
-        } else {
-            speakAI("I heard you say: " + transcript + ". I recommend initiating a diagnostic evaluation.", null, true);
-            setTimeout(() => document.getElementById('relax').scrollIntoView({ behavior: 'smooth' }), 2000);
+        btnElement.innerHTML = activeHtml;
+        btnElement.classList.add('listening');
+        if (btnElement.id === 'book-appointment-mic') {
+            btnElement.style.background = 'var(--accent-red)';
+            btnElement.style.animation = 'pulse-red 1.5s infinite';
         }
-    };
-    
-    recognition.onerror = (event) => {
-        voiceBtn.classList.remove('listening');
-        voiceBtn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
-        isListening = false;
-    };
+    }
+}
+
+function resetVapiButtons() {
+    if (activeVapiButton) {
+        activeVapiButton.innerHTML = originalVapiHtml;
+        activeVapiButton.classList.remove('listening');
+        if (activeVapiButton.id === 'book-appointment-mic') {
+            activeVapiButton.style.background = 'var(--accent-teal)';
+            activeVapiButton.style.animation = 'none';
+        }
+        activeVapiButton = null;
+    }
 }
 
 let currentVoiceLang = 'en-US';
@@ -393,7 +474,12 @@ const voiceTranslations = {
         'agent_processing': "Agent Processing...",
         'agent_help_you': "How may I help you today?",
         'tap_to_speak': "Tap to Speak",
-        'micro_active': "Tap the thoughts that resonate with you right now."
+        'micro_active': "Tap the thoughts that resonate with you right now.",
+        'agent_listening': "I am listening. How can I help you today?",
+        'agent_opening_triage': "I am opening the triage area. You are safe.",
+        'agent_directing_rehabs': "Directing you to verified rehabilitation centers in Bangalore.",
+        'agent_heard_you': "I heard you say: ",
+        'agent_recommend_eval': ". I recommend initiating a diagnostic evaluation."
     },
     'hi': {
         'intro': "नमस्ते! सेकंड चांस टू लाइफ में आपका स्वागत है।",
@@ -412,7 +498,12 @@ const voiceTranslations = {
         'agent_processing': "प्रोसेसिंग...",
         'agent_help_you': "मैं आपकी कैसे मदद कर सकता हूँ?",
         'tap_to_speak': "बोलने के लिए टैप करें",
-        'micro_active': "माइक्रोफ़ोन सक्रिय है।"
+        'micro_active': "माइक्रोफ़ोन सक्रिय है।",
+        'agent_listening': "मैं सुन रहा हूँ। मैं आज आपकी कैसे मदद कर सकता हूँ?",
+        'agent_opening_triage': "मैं उपचार क्षेत्र खोल रहा हूँ। आप सुरक्षित हैं।",
+        'agent_directing_rehabs': "बेंगलुरु में प्रमाणित नशा मुक्ति केंद्रों की ओर ले जा रहा हूँ।",
+        'agent_heard_you': "मैंने आपको कहते सुना: ",
+        'agent_recommend_eval': ". मैं नैदानिक मूल्यांकन शुरू करने की सलाह देता हूँ।"
     }
 };
 
@@ -421,10 +512,13 @@ function getSelectedLang() {
     const globalCombo = document.querySelector('.goog-te-combo');
     
     let lang = 'en';
-    if (localCombo && localCombo.value) {
-        lang = localCombo.value;
-    } else if (globalCombo && globalCombo.value) {
+    // Priority 1: If Google Translate is explicitly set to Hindi (or another non-English lang)
+    if (globalCombo && globalCombo.value && globalCombo.value !== 'en' && globalCombo.value !== '') {
         lang = globalCombo.value;
+    } 
+    // Priority 2: The local booking combo
+    else if (localCombo && localCombo.value) {
+        lang = localCombo.value;
     }
     
     currentVoiceLang = langCodeMap[lang] || 'en-US';
@@ -474,6 +568,8 @@ function speakAI(textOrKey, callback, isRawText = false) {
         utterance.rate = 0.95;
         utterance.pitch = 1.0;
         
+        window.currentUtterance = utterance; // Prevent garbage collection
+        
         if (callback) {
             const origCallback = callback;
             let called = false;
@@ -510,13 +606,14 @@ let spokenSections = new Set();
 
 function setupOralGuidance() {
     // Unlock Audio on first interaction to comply with browser policies
-    document.addEventListener('click', () => {
+    document.addEventListener('click', function unlockAudio() {
         if (!guidanceActive && isVoiceEnabled) {
             guidanceActive = true;
             // Introduce the app upon first tap!
             speakAI("intro");
+            document.removeEventListener('click', unlockAudio);
         }
-    }, { once: true });
+    });
 
     // Section Scroll Observer
     const observer = new IntersectionObserver((entries) => {
@@ -661,126 +758,18 @@ function endMindGame() {
     endMsg.style.display = 'block';
 }
 
-// Voice Assisted Appointment Booking
-let bookingState = 0; // 0: Idle, 1: Greeting, 2: AppointmentCheck, 3: DateTimeCapture
-
+// Voice Assisted Appointment Booking (Handled by Vapi)
 function setupBookingVoiceAgent() {
     const bookingMic = document.getElementById('book-appointment-mic');
     if (!bookingMic) return;
-    
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-        document.getElementById('booking-status-text').innerText = "Speech recognition not supported in your browser.";
-        return;
-    }
-    
-    const recognition = new SpeechRecognition();
-    recognition.continuous = false;
-    recognition.lang = 'en-US';
-    
-    let isListening = false;
-
-    function startListening() {
-        try {
-            // Update recognition language based on current selection
-            const localCombo = document.getElementById('booking-lang');
-            if (localCombo && localCombo.value) {
-                recognition.lang = {
-                    'hi': 'hi-IN',
-                    'kn': 'kn-IN',
-                    'te': 'te-IN',
-                    'ta': 'ta-IN',
-                    'en': 'en-US'
-                }[localCombo.value] || 'en-US';
-            }
-            
-            recognition.start();
-            bookingMic.style.background = 'var(--accent-red)';
-            bookingMic.style.animation = 'pulse-red 1.5s infinite';
-            isListening = true;
-        } catch(e) {
-            console.log("Recognition already started or error: ", e);
-        }
-    }
-
-    function stopListening() {
-        recognition.stop();
-        bookingMic.style.background = 'var(--accent-teal)';
-        bookingMic.style.animation = 'none';
-        isListening = false;
-    }
     
     bookingMic.addEventListener('click', () => {
         if (!isVoiceEnabled) {
             alert("Voice Assistance is currently disabled. Please enable 'VOICE ASSISTANCE' at the top of the page to book via voice.");
             return;
         }
-        if (!isListening) {
-            if (bookingState === 0) {
-                document.getElementById('booking-status-title').innerText = getVoiceText('agent_processing');
-                const intro = getVoiceText('agent_welcome');
-                document.getElementById('booking-status-text').innerText = intro;
-                speakAI('agent_welcome', () => {
-                    bookingState = 1;
-                    startListening();
-                });
-            } else {
-                startListening();
-            }
-        } else {
-            stopListening();
-        }
+        toggleVapiCall(bookingMic, '<i class="fa-solid fa-microphone"></i>', '<i class="fa-solid fa-ear-listen"></i>');
     });
-
-    recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript.toLowerCase();
-        stopListening();
-        
-        document.getElementById('booking-status-title').innerText = getVoiceText('agent_processing');
-        document.getElementById('booking-status-text').innerText = getVoiceText('agent_help_you') + " '" + transcript + "'";
-        
-        setTimeout(() => {
-            if (bookingState === 1) {
-                const nextQ = getVoiceText('agent_book_q');
-                document.getElementById('booking-status-text').innerText = nextQ;
-                speakAI('agent_book_q', () => {
-                    bookingState = 2;
-                    startListening();
-                });
-            } else if (bookingState === 2) {
-                if (transcript.includes('yes') || transcript.includes('yeah') || transcript.includes('book') || transcript.includes('sure') || 
-                    transcript.includes('鄐嫩冗鄐�') || transcript.includes('鉦嫩�鉦舟�') || transcript.includes('鈰�做鈺�馬鈺�') || transcript.includes('鉈�悅鉒�')) {
-                    const nextQ = getVoiceText('agent_time_q');
-                    document.getElementById('booking-status-text').innerText = nextQ;
-                    speakAI('agent_time_q', () => {
-                        bookingState = 3;
-                        startListening();
-                    });
-                } else {
-                    speakAI('agent_understood', () => {
-                        bookingState = 0;
-                        document.getElementById('booking-status-title').innerText = getVoiceText('tap_to_speak');
-                    });
-                }
-            } else if (bookingState === 3) {
-                document.getElementById('booking-status-title').innerText = "Appointment Found";
-                document.getElementById('booking-status-text').innerText = getVoiceText('agent_confirm') + transcript;
-                
-                const detailsBox = document.getElementById('booking-confirmation-details');
-                document.getElementById('booking-ticket').innerText = "Date/Time: " + transcript + "\nStatus: Confirmed & Booked";
-                detailsBox.style.display = 'block';
-                
-                speakAI(getVoiceText('agent_confirm') + transcript, () => {
-                    bookingState = 0;
-                }, true);
-            }
-        }, 1500);
-    };
-
-    recognition.onerror = () => {
-        stopListening();
-        document.getElementById('booking-status-title').innerText = getVoiceText('tap_to_speak');
-    };
 }
 
 // Initialize
@@ -788,9 +777,10 @@ document.addEventListener('DOMContentLoaded', () => {
     updateVoiceToggleUI();
     setupGlobalVoiceToggle();
     renderRehabs();
+    setupSearch();
     renderBadges();
     setupThemeSong();
-    setupVoiceAgent();
+    initVapiAgent();
     setupBookingVoiceAgent();
     setupOralGuidance();
 });

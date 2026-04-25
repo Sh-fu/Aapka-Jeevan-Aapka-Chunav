@@ -63,21 +63,13 @@
         
         <div class="apollo-search-box">
             <i class="fa-solid fa-magnifying-glass search-icon"></i>
-            <input type="text" placeholder="Search for rehabilitation centers, doctors, or therapies in Bangalore...">
-            <button class="btn-primary search-btn">Search</button>
+            <input type="text" id="search-input" placeholder="Search for rehabilitation centers, doctors, or therapies in Bangalore...">
+            <button id="search-btn" class="btn-primary search-btn">Search</button>
         </div>
     </header>
 
     <!-- Floating Apollo Quick Actions -->
     <div class="apollo-quick-actions">
-        <div class="action-card" onclick="window.location.href='#rehabs'">
-            <div class="action-icon" style="background: rgba(13, 148, 136, 0.15); color: var(--accent-teal)"><i class="fa-solid fa-hospital"></i></div>
-            <h4>Locate Centers</h4>
-        </div>
-        <div class="action-card" onclick="window.location.href='#relax'">
-            <div class="action-icon" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-orange)"><i class="fa-solid fa-clipboard-question"></i></div>
-            <h4>Diagnostics</h4>
-        </div>
         <div class="action-card" onclick="document.getElementById('voice-agent-btn').click()">
             <div class="action-icon" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6"><i class="fa-solid fa-headset"></i></div>
             <h4>Voice Agent</h4>
@@ -95,7 +87,7 @@
     <!-- Apollo Style Stats Overview -->
     <div class="apollo-stats-strip">
         <div class="stat">
-            <h2>3+</h2>
+            <h2>120+</h2>
             <p>Verified Care Centers</p>
         </div>
         <div class="stat">
@@ -107,7 +99,7 @@
             <p>AI Triage T.A.T.</p>
         </div>
         <div class="stat">
-            <h2>15+</h2>
+            <h2>45+</h2>
             <p>Clinical Protocols</p>
         </div>
     </div>
@@ -293,6 +285,32 @@
         </div>
     </section>
 
+    <!-- Physiological Impact Gallery -->
+    <section id="impact-gallery" class="medical-section bg-section-alt" style="border-top: 1px solid var(--glass-border);">
+        <div class="apollo-section-header">
+            <h2>Physiological Impact of Dependency</h2>
+            <div class="title-divider"></div>
+            <p>Clinical visual data demonstrating the adverse neurological and systemic effects of prolonged substance use.</p>
+        </div>
+        <div class="impact-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; max-width: 1000px; margin: 0 auto;">
+            <div class="impact-card" style="background: var(--bg-card); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--glass-border); text-align: center; transition: transform 0.3s ease;">
+                <img src="brain_scan.png" alt="Comparative Brain Scan" style="width: 100%; border-radius: 8px; margin-bottom: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                <h4 style="color: var(--accent-red); font-size: 1.2rem;">Dopaminergic Depletion</h4>
+                <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 0.5rem;">Comparative scan demonstrating severe reduction in neural activity and receptor availability.</p>
+            </div>
+            <div class="impact-card" style="background: var(--bg-card); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--glass-border); text-align: center; transition: transform 0.3s ease;">
+                <img src="organ_stress.png" alt="Systemic Organ Stress" style="width: 100%; border-radius: 8px; margin-bottom: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                <h4 style="color: var(--accent-orange); font-size: 1.2rem;">Hepatic & Cardiac Stress</h4>
+                <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 0.5rem;">Anatomical breakdown showing inflammation, cirrhosis, and acute cardiovascular strain.</p>
+            </div>
+            <div class="impact-card" style="background: var(--bg-card); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--glass-border); text-align: center; transition: transform 0.3s ease;">
+                <img src="neural_network.png" alt="Synaptic Degradation" style="width: 100%; border-radius: 8px; margin-bottom: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                <h4 style="color: var(--accent-teal); font-size: 1.2rem;">Synaptic Degradation</h4>
+                <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 0.5rem;">Disrupted neural networks leading to profound cognitive fog, memory loss, and delayed processing.</p>
+            </div>
+        </div>
+    </section>
+
     <!-- Voice Appointment Booking -->
     <section id="booking-section" class="medical-section bg-section-alt" style="border-top: 1px solid var(--glass-border);">
         <div class="apollo-section-header">
@@ -329,6 +347,8 @@
         <p style="font-size: 0.8rem; margin-top: 0.5rem; color: var(--text-muted);">Disclaimer: This infrastructure provides algorithmic triage and general clinical guidance. In cases of acute overdose or severe physical withdrawal, dial 112 immediately or proceed to the nearest emergency ward.</p>
     </footer>
 
+    <!-- Vapi Web SDK (UMD) -->
+    <script src="https://cdn.jsdelivr.net/gh/balacodeio/Vapi-Web-UMD@latest/dist/latest/vapi-web-bundle.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
