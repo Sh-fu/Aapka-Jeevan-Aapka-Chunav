@@ -773,36 +773,59 @@ function setupBookingVoiceAgent() {
 }
 
 // Doctor Selection Logic
-function selectDoctor(doctorName, btnElement) {
-    // Reset all buttons
+window.selectDoctor = function(doctorName, btnElement) {
+    if (!doctorName) return;
+    console.log("Doctor selection triggered for:", doctorName);
+    
+    // Sync dropdown if it exists
+    const dropdown = document.getElementById('doctor-select-dropdown');
+    if (dropdown && dropdown.value !== doctorName) {
+        dropdown.value = doctorName;
+    }
+    
+    // Reset all buttons and cards
     const allBtns = document.querySelectorAll('.doctor-select-btn');
     allBtns.forEach(btn => {
         btn.innerText = 'Select';
-        btn.classList.remove('btn-primary');
-        btn.classList.add('btn-outline');
-        btn.closest('.medical-card').style.borderColor = 'var(--glass-border)';
-        btn.closest('.medical-card').style.boxShadow = 'none';
+        btn.style.backgroundColor = 'transparent';
+        btn.style.color = 'var(--accent-teal)';
+        const card = btn.closest('.medical-card');
+        if (card) {
+            card.style.borderColor = 'var(--glass-border)';
+            card.style.boxShadow = 'none';
+            card.style.transform = 'scale(1)';
+        }
     });
     
-    // Highlight selected
-    btnElement.innerText = 'Selected';
-    btnElement.classList.remove('btn-outline');
-    btnElement.classList.add('btn-primary');
-    
-    const card = btnElement.closest('.medical-card');
-    card.style.borderColor = 'var(--accent-teal)';
-    card.style.boxShadow = '0 0 20px rgba(13, 148, 136, 0.3)';
+    // Highlight selected button/card in the grid
+    allBtns.forEach(btn => {
+        const card = btn.closest('.medical-card');
+        const h4 = card ? card.querySelector('h4') : null;
+        if (h4 && h4.innerText.trim() === doctorName.trim()) {
+            btn.innerText = 'Selected';
+            btn.style.backgroundColor = 'var(--accent-teal)';
+            btn.style.color = '#ffffff';
+            card.style.borderColor = 'var(--accent-teal)';
+            card.style.boxShadow = '0 0 25px rgba(13, 148, 136, 0.4)';
+            card.style.transform = 'scale(1.02)';
+        }
+    });
     
     // Update booking ticket
     const detailsBox = document.getElementById('booking-confirmation-details');
     const ticket = document.getElementById('booking-ticket');
     
-    detailsBox.style.display = 'block';
-    ticket.innerHTML = `Doctor: <span style="color:var(--accent-teal)">${doctorName}</span><br>Status: Please use the Voice Agent to select a time slot.`;
+    if (detailsBox && ticket) {
+        detailsBox.style.display = 'block';
+        ticket.innerHTML = `Selected Specialist: <strong style="color:var(--accent-teal)">${doctorName}</strong><br>Next Step: Use the microphone to confirm your time slot.`;
+    }
     
-    // Scroll to voice agent
-    document.getElementById('consultation-hub').scrollIntoView({ behavior: 'smooth' });
-}
+    // Only scroll if a button was clicked (if btnElement is provided)
+    if (btnElement) {
+        const hub = document.getElementById('consultation-hub');
+        if (hub) hub.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+};
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
